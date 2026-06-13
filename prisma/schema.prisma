@@ -1,0 +1,42 @@
+generator client {
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+//Дом
+model building {
+  id               String   @id @default(dbgenerated("newid()"))
+  address          String
+  cadastralNumber  String   @unique
+  yearBuilt        Int?
+  floors           Int?
+  entrances        Int?
+  totalArea        Float
+  totalPremises    Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  premises         premise[]   // эта связь остаётся (модель premise уже есть)
+  // meetings       meeting[]   // временно удалить – модель meeting ещё не создана
+  // employeeAccess employeeBuildingAccess[] // временно удалить
+}
+
+model premise {
+  id               String   @id @default(dbgenerated("newid()"))
+  buildingId       String
+  number           String
+  cadastralNumber  String?  @unique
+  area             Float
+  ownershipForm    String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  building         building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  // ownerships     ownership[] // временно удалить – модель ownership ещё не создана
+}
