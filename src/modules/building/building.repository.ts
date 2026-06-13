@@ -1,41 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/';
-import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateBuildingDto } from './dto/create-building.dto';
+import { UpdateBuildingDto } from './dto/update-building.dto';
 
 @Injectable()
 export class BuildingRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.building.findMany();
+  async findAll(companyId?: string) {
+    return this.prisma.building.findMany({
+      where: companyId ? { companyId } : {},
+      orderBy: { address: 'asc' },
+    });
   }
 
   async findById(id: string) {
     return this.prisma.building.findUnique({
       where: { id },
+      include: { premises: true },
     });
   }
 
   async findByCadastralNumber(cadastralNumber: string) {
-    return this.prisma.building.findUnique({
-      where: { cadastralNumber },
+    return this.prisma.building.findUnique({ where: { cadastralNumber } });
+  }
+
+  async create(data: CreateBuildingDto) {
+    return this.prisma.building.create({
+      data: {
+        companyId: data.companyId, address: data.address,
+        cadastralNumber: data.cadastralNumber, yearBuilt: data.yearBuilt,
+        floors: data.floors, entrances: data.entrances,
+        totalArea: data.totalArea, totalPremises: data.totalPremises,
+      },
     });
   }
 
-  async create(data: Prisma.buildingCreateInput) {
-    return this.prisma.building.create({ data });
-  }
-
-  async update(id: string, data: Prisma.buildingUpdateInput) {
-    return this.prisma.building.update({
-      where: { id },
-      data,
-    });
+  async update(id: string, data: UpdateBuildingDto) {
+    return this.prisma.building.update({ where: { id }, data });
   }
 
   async delete(id: string) {
-    return this.prisma.building.delete({
-      where: { id },
-    });
+    return this.prisma.building.delete({ where: { id } });
   }
 }

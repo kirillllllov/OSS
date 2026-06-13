@@ -1,12 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class BuildingResponseDto {
   @ApiProperty() id: string;
+  @ApiProperty() companyId: string;
   @ApiProperty() address: string;
   @ApiProperty() cadastralNumber: string;
-  @ApiProperty({ required: false }) yearBuilt?: number;
-  @ApiProperty({ required: false }) floors?: number;
-  @ApiProperty({ required: false }) entrances?: number;
+  @ApiPropertyOptional() yearBuilt?: number;
+  @ApiPropertyOptional() floors?: number;
+  @ApiPropertyOptional() entrances?: number;
   @ApiProperty() totalArea: number;
   @ApiProperty() totalPremises: number;
   @ApiProperty() createdAt: Date;

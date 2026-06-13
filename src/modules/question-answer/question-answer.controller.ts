@@ -1,0 +1,42 @@
+import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { QuestionAnswerService } from './question-answer.service';
+import { CreateQuestionAnswerDto } from './dto/create-question-answer.dto';
+import { QuestionAnswerResponseDto } from './dto/question-answer-response.dto';
+
+@ApiTags('question-answers')
+@ApiBearerAuth()
+@Controller('question-answers')
+export class QuestionAnswerController {
+  constructor(private readonly svc: QuestionAnswerService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Записать/обновить ответ по вопросу бюллетеня' })
+  @ApiResponse({ status: 201, type: QuestionAnswerResponseDto })
+  upsert(@Body() dto: CreateQuestionAnswerDto): Promise<QuestionAnswerResponseDto> {
+    return this.svc.upsert(dto);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Список ответов' })
+  @ApiResponse({ status: 200, type: [QuestionAnswerResponseDto] })
+  @ApiQuery({ name: 'ballotId', required: false })
+  @ApiQuery({ name: 'agendaItemId', required: false })
+  findAll(@Query('ballotId') ballotId?: string, @Query('agendaItemId') agendaItemId?: string): Promise<QuestionAnswerResponseDto[]> {
+    return this.svc.findAll(ballotId, agendaItemId);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Получить ответ по ID' })
+  @ApiResponse({ status: 200, type: QuestionAnswerResponseDto })
+  findOne(@Param('id') id: string): Promise<QuestionAnswerResponseDto> {
+    return this.svc.findOne(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Удалить ответ' })
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.svc.delete(id);
+  }
+}

@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client'; 
 
 @Injectable()
 export class PremiseRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(buildingId?: string) {
-    const where = buildingId ? { buildingId } : {};
     return this.prisma.premise.findMany({
-      where,
+      where: buildingId ? { buildingId } : {},
       include: { building: true },
     });
   }
@@ -17,25 +15,20 @@ export class PremiseRepository {
   async findById(id: string) {
     return this.prisma.premise.findUnique({
       where: { id },
-      include: { building: true, ownerships: true },
+      include: { building: true, ownerships: { include: { owner: true } } },
     });
   }
 
   async findByCadastralNumber(cadastralNumber: string) {
-    return this.prisma.premise.findUnique({
-      where: { cadastralNumber },
-    });
+    return this.prisma.premise.findUnique({ where: { cadastralNumber } });
   }
 
-  async create(data: Prisma.premiseCreateInput) { 
+  async create(data: any) {
     return this.prisma.premise.create({ data });
   }
 
-  async update(id: string, data: Prisma.premiseUpdateInput) { // 👈 Prisma.тип
-    return this.prisma.premise.update({
-      where: { id },
-      data,
-    });
+  async update(id: string, data: any) {
+    return this.prisma.premise.update({ where: { id }, data });
   }
 
   async delete(id: string) {

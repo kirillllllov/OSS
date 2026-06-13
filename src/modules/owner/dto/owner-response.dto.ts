@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class OwnerResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() fullName: string;
-  @ApiProperty({ required: false }) inn?: string;
-  @ApiProperty({ required: false }) snils?: string;
+  @ApiPropertyOptional() inn?: string;
+  @ApiPropertyOptional() snils?: string;
+  @ApiProperty() updatedAt: Date;
 }
