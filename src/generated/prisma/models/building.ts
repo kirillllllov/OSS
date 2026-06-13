@@ -44,6 +44,7 @@ export type BuildingSumAggregateOutputType = {
 
 export type BuildingMinAggregateOutputType = {
   id: string | null
+  companyId: string | null
   address: string | null
   cadastralNumber: string | null
   yearBuilt: number | null
@@ -57,6 +58,7 @@ export type BuildingMinAggregateOutputType = {
 
 export type BuildingMaxAggregateOutputType = {
   id: string | null
+  companyId: string | null
   address: string | null
   cadastralNumber: string | null
   yearBuilt: number | null
@@ -70,6 +72,7 @@ export type BuildingMaxAggregateOutputType = {
 
 export type BuildingCountAggregateOutputType = {
   id: number
+  companyId: number
   address: number
   cadastralNumber: number
   yearBuilt: number
@@ -101,6 +104,7 @@ export type BuildingSumAggregateInputType = {
 
 export type BuildingMinAggregateInputType = {
   id?: true
+  companyId?: true
   address?: true
   cadastralNumber?: true
   yearBuilt?: true
@@ -114,6 +118,7 @@ export type BuildingMinAggregateInputType = {
 
 export type BuildingMaxAggregateInputType = {
   id?: true
+  companyId?: true
   address?: true
   cadastralNumber?: true
   yearBuilt?: true
@@ -127,6 +132,7 @@ export type BuildingMaxAggregateInputType = {
 
 export type BuildingCountAggregateInputType = {
   id?: true
+  companyId?: true
   address?: true
   cadastralNumber?: true
   yearBuilt?: true
@@ -227,6 +233,7 @@ export type buildingGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type BuildingGroupByOutputType = {
   id: string
+  companyId: string
   address: string
   cadastralNumber: string
   yearBuilt: number | null
@@ -263,6 +270,7 @@ export type buildingWhereInput = {
   OR?: Prisma.buildingWhereInput[]
   NOT?: Prisma.buildingWhereInput | Prisma.buildingWhereInput[]
   id?: Prisma.StringFilter<"building"> | string
+  companyId?: Prisma.StringFilter<"building"> | string
   address?: Prisma.StringFilter<"building"> | string
   cadastralNumber?: Prisma.StringFilter<"building"> | string
   yearBuilt?: Prisma.IntNullableFilter<"building"> | number | null
@@ -272,11 +280,16 @@ export type buildingWhereInput = {
   totalPremises?: Prisma.IntFilter<"building"> | number
   createdAt?: Prisma.DateTimeFilter<"building"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"building"> | Date | string
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.companyWhereInput>
   premises?: Prisma.PremiseListRelationFilter
+  employeeAccess?: Prisma.EmployeeBuildingAccessListRelationFilter
+  registryVersions?: Prisma.RegistryVersionListRelationFilter
+  meetings?: Prisma.MeetingListRelationFilter
 }
 
 export type buildingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   cadastralNumber?: Prisma.SortOrder
   yearBuilt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,7 +299,11 @@ export type buildingOrderByWithRelationInput = {
   totalPremises?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  company?: Prisma.companyOrderByWithRelationInput
   premises?: Prisma.premiseOrderByRelationAggregateInput
+  employeeAccess?: Prisma.employeeBuildingAccessOrderByRelationAggregateInput
+  registryVersions?: Prisma.registryVersionOrderByRelationAggregateInput
+  meetings?: Prisma.meetingOrderByRelationAggregateInput
 }
 
 export type buildingWhereUniqueInput = Prisma.AtLeast<{
@@ -295,6 +312,7 @@ export type buildingWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.buildingWhereInput | Prisma.buildingWhereInput[]
   OR?: Prisma.buildingWhereInput[]
   NOT?: Prisma.buildingWhereInput | Prisma.buildingWhereInput[]
+  companyId?: Prisma.StringFilter<"building"> | string
   address?: Prisma.StringFilter<"building"> | string
   yearBuilt?: Prisma.IntNullableFilter<"building"> | number | null
   floors?: Prisma.IntNullableFilter<"building"> | number | null
@@ -303,11 +321,16 @@ export type buildingWhereUniqueInput = Prisma.AtLeast<{
   totalPremises?: Prisma.IntFilter<"building"> | number
   createdAt?: Prisma.DateTimeFilter<"building"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"building"> | Date | string
+  company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.companyWhereInput>
   premises?: Prisma.PremiseListRelationFilter
+  employeeAccess?: Prisma.EmployeeBuildingAccessListRelationFilter
+  registryVersions?: Prisma.RegistryVersionListRelationFilter
+  meetings?: Prisma.MeetingListRelationFilter
 }, "id" | "cadastralNumber">
 
 export type buildingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   cadastralNumber?: Prisma.SortOrder
   yearBuilt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,6 +352,7 @@ export type buildingScalarWhereWithAggregatesInput = {
   OR?: Prisma.buildingScalarWhereWithAggregatesInput[]
   NOT?: Prisma.buildingScalarWhereWithAggregatesInput | Prisma.buildingScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"building"> | string
+  companyId?: Prisma.StringWithAggregatesFilter<"building"> | string
   address?: Prisma.StringWithAggregatesFilter<"building"> | string
   cadastralNumber?: Prisma.StringWithAggregatesFilter<"building"> | string
   yearBuilt?: Prisma.IntNullableWithAggregatesFilter<"building"> | number | null
@@ -351,11 +375,16 @@ export type buildingCreateInput = {
   totalPremises: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutBuildingsInput
   premises?: Prisma.premiseCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingCreateNestedManyWithoutBuildingInput
 }
 
 export type buildingUncheckedCreateInput = {
   id?: string
+  companyId: string
   address: string
   cadastralNumber: string
   yearBuilt?: number | null
@@ -366,6 +395,9 @@ export type buildingUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   premises?: Prisma.premiseUncheckedCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionUncheckedCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingUncheckedCreateNestedManyWithoutBuildingInput
 }
 
 export type buildingUpdateInput = {
@@ -379,11 +411,16 @@ export type buildingUpdateInput = {
   totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutBuildingsNestedInput
   premises?: Prisma.premiseUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUpdateManyWithoutBuildingNestedInput
 }
 
 export type buildingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
   yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -394,10 +431,14 @@ export type buildingUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   premises?: Prisma.premiseUncheckedUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUncheckedUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUncheckedUpdateManyWithoutBuildingNestedInput
 }
 
 export type buildingCreateManyInput = {
   id?: string
+  companyId: string
   address: string
   cadastralNumber: string
   yearBuilt?: number | null
@@ -424,6 +465,7 @@ export type buildingUpdateManyMutationInput = {
 
 export type buildingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
   yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -435,8 +477,24 @@ export type buildingUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type BuildingListRelationFilter = {
+  every?: Prisma.buildingWhereInput
+  some?: Prisma.buildingWhereInput
+  none?: Prisma.buildingWhereInput
+}
+
+export type buildingOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type BuildingScalarRelationFilter = {
+  is?: Prisma.buildingWhereInput
+  isNot?: Prisma.buildingWhereInput
+}
+
 export type buildingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   cadastralNumber?: Prisma.SortOrder
   yearBuilt?: Prisma.SortOrder
@@ -458,6 +516,7 @@ export type buildingAvgOrderByAggregateInput = {
 
 export type buildingMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   cadastralNumber?: Prisma.SortOrder
   yearBuilt?: Prisma.SortOrder
@@ -471,6 +530,7 @@ export type buildingMaxOrderByAggregateInput = {
 
 export type buildingMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  companyId?: Prisma.SortOrder
   address?: Prisma.SortOrder
   cadastralNumber?: Prisma.SortOrder
   yearBuilt?: Prisma.SortOrder
@@ -490,13 +550,60 @@ export type buildingSumOrderByAggregateInput = {
   totalPremises?: Prisma.SortOrder
 }
 
-export type BuildingScalarRelationFilter = {
-  is?: Prisma.buildingWhereInput
-  isNot?: Prisma.buildingWhereInput
+export type buildingCreateNestedManyWithoutCompanyInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput> | Prisma.buildingCreateWithoutCompanyInput[] | Prisma.buildingUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutCompanyInput | Prisma.buildingCreateOrConnectWithoutCompanyInput[]
+  createMany?: Prisma.buildingCreateManyCompanyInputEnvelope
+  connect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type buildingUncheckedCreateNestedManyWithoutCompanyInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput> | Prisma.buildingCreateWithoutCompanyInput[] | Prisma.buildingUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutCompanyInput | Prisma.buildingCreateOrConnectWithoutCompanyInput[]
+  createMany?: Prisma.buildingCreateManyCompanyInputEnvelope
+  connect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+}
+
+export type buildingUpdateManyWithoutCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput> | Prisma.buildingCreateWithoutCompanyInput[] | Prisma.buildingUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutCompanyInput | Prisma.buildingCreateOrConnectWithoutCompanyInput[]
+  upsert?: Prisma.buildingUpsertWithWhereUniqueWithoutCompanyInput | Prisma.buildingUpsertWithWhereUniqueWithoutCompanyInput[]
+  createMany?: Prisma.buildingCreateManyCompanyInputEnvelope
+  set?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  disconnect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  delete?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  connect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  update?: Prisma.buildingUpdateWithWhereUniqueWithoutCompanyInput | Prisma.buildingUpdateWithWhereUniqueWithoutCompanyInput[]
+  updateMany?: Prisma.buildingUpdateManyWithWhereWithoutCompanyInput | Prisma.buildingUpdateManyWithWhereWithoutCompanyInput[]
+  deleteMany?: Prisma.buildingScalarWhereInput | Prisma.buildingScalarWhereInput[]
+}
+
+export type buildingUncheckedUpdateManyWithoutCompanyNestedInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput> | Prisma.buildingCreateWithoutCompanyInput[] | Prisma.buildingUncheckedCreateWithoutCompanyInput[]
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutCompanyInput | Prisma.buildingCreateOrConnectWithoutCompanyInput[]
+  upsert?: Prisma.buildingUpsertWithWhereUniqueWithoutCompanyInput | Prisma.buildingUpsertWithWhereUniqueWithoutCompanyInput[]
+  createMany?: Prisma.buildingCreateManyCompanyInputEnvelope
+  set?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  disconnect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  delete?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  connect?: Prisma.buildingWhereUniqueInput | Prisma.buildingWhereUniqueInput[]
+  update?: Prisma.buildingUpdateWithWhereUniqueWithoutCompanyInput | Prisma.buildingUpdateWithWhereUniqueWithoutCompanyInput[]
+  updateMany?: Prisma.buildingUpdateManyWithWhereWithoutCompanyInput | Prisma.buildingUpdateManyWithWhereWithoutCompanyInput[]
+  deleteMany?: Prisma.buildingScalarWhereInput | Prisma.buildingScalarWhereInput[]
+}
+
+export type buildingCreateNestedOneWithoutEmployeeAccessInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutEmployeeAccessInput, Prisma.buildingUncheckedCreateWithoutEmployeeAccessInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutEmployeeAccessInput
+  connect?: Prisma.buildingWhereUniqueInput
+}
+
+export type buildingUpdateOneRequiredWithoutEmployeeAccessNestedInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutEmployeeAccessInput, Prisma.buildingUncheckedCreateWithoutEmployeeAccessInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutEmployeeAccessInput
+  upsert?: Prisma.buildingUpsertWithoutEmployeeAccessInput
+  connect?: Prisma.buildingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.buildingUpdateToOneWithWhereWithoutEmployeeAccessInput, Prisma.buildingUpdateWithoutEmployeeAccessInput>, Prisma.buildingUncheckedUpdateWithoutEmployeeAccessInput>
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -523,10 +630,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type buildingCreateNestedOneWithoutPremisesInput = {
   create?: Prisma.XOR<Prisma.buildingCreateWithoutPremisesInput, Prisma.buildingUncheckedCreateWithoutPremisesInput>
   connectOrCreate?: Prisma.buildingCreateOrConnectWithoutPremisesInput
@@ -541,6 +644,194 @@ export type buildingUpdateOneRequiredWithoutPremisesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.buildingUpdateToOneWithWhereWithoutPremisesInput, Prisma.buildingUpdateWithoutPremisesInput>, Prisma.buildingUncheckedUpdateWithoutPremisesInput>
 }
 
+export type buildingCreateNestedOneWithoutRegistryVersionsInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutRegistryVersionsInput, Prisma.buildingUncheckedCreateWithoutRegistryVersionsInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutRegistryVersionsInput
+  connect?: Prisma.buildingWhereUniqueInput
+}
+
+export type buildingUpdateOneRequiredWithoutRegistryVersionsNestedInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutRegistryVersionsInput, Prisma.buildingUncheckedCreateWithoutRegistryVersionsInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutRegistryVersionsInput
+  upsert?: Prisma.buildingUpsertWithoutRegistryVersionsInput
+  connect?: Prisma.buildingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.buildingUpdateToOneWithWhereWithoutRegistryVersionsInput, Prisma.buildingUpdateWithoutRegistryVersionsInput>, Prisma.buildingUncheckedUpdateWithoutRegistryVersionsInput>
+}
+
+export type buildingCreateNestedOneWithoutMeetingsInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutMeetingsInput, Prisma.buildingUncheckedCreateWithoutMeetingsInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutMeetingsInput
+  connect?: Prisma.buildingWhereUniqueInput
+}
+
+export type buildingUpdateOneRequiredWithoutMeetingsNestedInput = {
+  create?: Prisma.XOR<Prisma.buildingCreateWithoutMeetingsInput, Prisma.buildingUncheckedCreateWithoutMeetingsInput>
+  connectOrCreate?: Prisma.buildingCreateOrConnectWithoutMeetingsInput
+  upsert?: Prisma.buildingUpsertWithoutMeetingsInput
+  connect?: Prisma.buildingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.buildingUpdateToOneWithWhereWithoutMeetingsInput, Prisma.buildingUpdateWithoutMeetingsInput>, Prisma.buildingUncheckedUpdateWithoutMeetingsInput>
+}
+
+export type buildingCreateWithoutCompanyInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  premises?: Prisma.premiseCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingUncheckedCreateWithoutCompanyInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  premises?: Prisma.premiseUncheckedCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionUncheckedCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingUncheckedCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingCreateOrConnectWithoutCompanyInput = {
+  where: Prisma.buildingWhereUniqueInput
+  create: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput>
+}
+
+export type buildingCreateManyCompanyInputEnvelope = {
+  data: Prisma.buildingCreateManyCompanyInput | Prisma.buildingCreateManyCompanyInput[]
+}
+
+export type buildingUpsertWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.buildingWhereUniqueInput
+  update: Prisma.XOR<Prisma.buildingUpdateWithoutCompanyInput, Prisma.buildingUncheckedUpdateWithoutCompanyInput>
+  create: Prisma.XOR<Prisma.buildingCreateWithoutCompanyInput, Prisma.buildingUncheckedCreateWithoutCompanyInput>
+}
+
+export type buildingUpdateWithWhereUniqueWithoutCompanyInput = {
+  where: Prisma.buildingWhereUniqueInput
+  data: Prisma.XOR<Prisma.buildingUpdateWithoutCompanyInput, Prisma.buildingUncheckedUpdateWithoutCompanyInput>
+}
+
+export type buildingUpdateManyWithWhereWithoutCompanyInput = {
+  where: Prisma.buildingScalarWhereInput
+  data: Prisma.XOR<Prisma.buildingUpdateManyMutationInput, Prisma.buildingUncheckedUpdateManyWithoutCompanyInput>
+}
+
+export type buildingScalarWhereInput = {
+  AND?: Prisma.buildingScalarWhereInput | Prisma.buildingScalarWhereInput[]
+  OR?: Prisma.buildingScalarWhereInput[]
+  NOT?: Prisma.buildingScalarWhereInput | Prisma.buildingScalarWhereInput[]
+  id?: Prisma.StringFilter<"building"> | string
+  companyId?: Prisma.StringFilter<"building"> | string
+  address?: Prisma.StringFilter<"building"> | string
+  cadastralNumber?: Prisma.StringFilter<"building"> | string
+  yearBuilt?: Prisma.IntNullableFilter<"building"> | number | null
+  floors?: Prisma.IntNullableFilter<"building"> | number | null
+  entrances?: Prisma.IntNullableFilter<"building"> | number | null
+  totalArea?: Prisma.FloatFilter<"building"> | number
+  totalPremises?: Prisma.IntFilter<"building"> | number
+  createdAt?: Prisma.DateTimeFilter<"building"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"building"> | Date | string
+}
+
+export type buildingCreateWithoutEmployeeAccessInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutBuildingsInput
+  premises?: Prisma.premiseCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingUncheckedCreateWithoutEmployeeAccessInput = {
+  id?: string
+  companyId: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  premises?: Prisma.premiseUncheckedCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionUncheckedCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingUncheckedCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingCreateOrConnectWithoutEmployeeAccessInput = {
+  where: Prisma.buildingWhereUniqueInput
+  create: Prisma.XOR<Prisma.buildingCreateWithoutEmployeeAccessInput, Prisma.buildingUncheckedCreateWithoutEmployeeAccessInput>
+}
+
+export type buildingUpsertWithoutEmployeeAccessInput = {
+  update: Prisma.XOR<Prisma.buildingUpdateWithoutEmployeeAccessInput, Prisma.buildingUncheckedUpdateWithoutEmployeeAccessInput>
+  create: Prisma.XOR<Prisma.buildingCreateWithoutEmployeeAccessInput, Prisma.buildingUncheckedCreateWithoutEmployeeAccessInput>
+  where?: Prisma.buildingWhereInput
+}
+
+export type buildingUpdateToOneWithWhereWithoutEmployeeAccessInput = {
+  where?: Prisma.buildingWhereInput
+  data: Prisma.XOR<Prisma.buildingUpdateWithoutEmployeeAccessInput, Prisma.buildingUncheckedUpdateWithoutEmployeeAccessInput>
+}
+
+export type buildingUpdateWithoutEmployeeAccessInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutBuildingsNestedInput
+  premises?: Prisma.premiseUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingUncheckedUpdateWithoutEmployeeAccessInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  premises?: Prisma.premiseUncheckedUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUncheckedUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUncheckedUpdateManyWithoutBuildingNestedInput
+}
+
 export type buildingCreateWithoutPremisesInput = {
   id?: string
   address: string
@@ -552,10 +843,15 @@ export type buildingCreateWithoutPremisesInput = {
   totalPremises: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutBuildingsInput
+  employeeAccess?: Prisma.employeeBuildingAccessCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingCreateNestedManyWithoutBuildingInput
 }
 
 export type buildingUncheckedCreateWithoutPremisesInput = {
   id?: string
+  companyId: string
   address: string
   cadastralNumber: string
   yearBuilt?: number | null
@@ -565,6 +861,9 @@ export type buildingUncheckedCreateWithoutPremisesInput = {
   totalPremises: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionUncheckedCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingUncheckedCreateNestedManyWithoutBuildingInput
 }
 
 export type buildingCreateOrConnectWithoutPremisesInput = {
@@ -594,9 +893,245 @@ export type buildingUpdateWithoutPremisesInput = {
   totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutBuildingsNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUpdateManyWithoutBuildingNestedInput
 }
 
 export type buildingUncheckedUpdateWithoutPremisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUncheckedUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUncheckedUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingCreateWithoutRegistryVersionsInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutBuildingsInput
+  premises?: Prisma.premiseCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingUncheckedCreateWithoutRegistryVersionsInput = {
+  id?: string
+  companyId: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  premises?: Prisma.premiseUncheckedCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedCreateNestedManyWithoutBuildingInput
+  meetings?: Prisma.meetingUncheckedCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingCreateOrConnectWithoutRegistryVersionsInput = {
+  where: Prisma.buildingWhereUniqueInput
+  create: Prisma.XOR<Prisma.buildingCreateWithoutRegistryVersionsInput, Prisma.buildingUncheckedCreateWithoutRegistryVersionsInput>
+}
+
+export type buildingUpsertWithoutRegistryVersionsInput = {
+  update: Prisma.XOR<Prisma.buildingUpdateWithoutRegistryVersionsInput, Prisma.buildingUncheckedUpdateWithoutRegistryVersionsInput>
+  create: Prisma.XOR<Prisma.buildingCreateWithoutRegistryVersionsInput, Prisma.buildingUncheckedCreateWithoutRegistryVersionsInput>
+  where?: Prisma.buildingWhereInput
+}
+
+export type buildingUpdateToOneWithWhereWithoutRegistryVersionsInput = {
+  where?: Prisma.buildingWhereInput
+  data: Prisma.XOR<Prisma.buildingUpdateWithoutRegistryVersionsInput, Prisma.buildingUncheckedUpdateWithoutRegistryVersionsInput>
+}
+
+export type buildingUpdateWithoutRegistryVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutBuildingsNestedInput
+  premises?: Prisma.premiseUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingUncheckedUpdateWithoutRegistryVersionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  premises?: Prisma.premiseUncheckedUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUncheckedUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingCreateWithoutMeetingsInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.companyCreateNestedOneWithoutBuildingsInput
+  premises?: Prisma.premiseCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingUncheckedCreateWithoutMeetingsInput = {
+  id?: string
+  companyId: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  premises?: Prisma.premiseUncheckedCreateNestedManyWithoutBuildingInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedCreateNestedManyWithoutBuildingInput
+  registryVersions?: Prisma.registryVersionUncheckedCreateNestedManyWithoutBuildingInput
+}
+
+export type buildingCreateOrConnectWithoutMeetingsInput = {
+  where: Prisma.buildingWhereUniqueInput
+  create: Prisma.XOR<Prisma.buildingCreateWithoutMeetingsInput, Prisma.buildingUncheckedCreateWithoutMeetingsInput>
+}
+
+export type buildingUpsertWithoutMeetingsInput = {
+  update: Prisma.XOR<Prisma.buildingUpdateWithoutMeetingsInput, Prisma.buildingUncheckedUpdateWithoutMeetingsInput>
+  create: Prisma.XOR<Prisma.buildingCreateWithoutMeetingsInput, Prisma.buildingUncheckedCreateWithoutMeetingsInput>
+  where?: Prisma.buildingWhereInput
+}
+
+export type buildingUpdateToOneWithWhereWithoutMeetingsInput = {
+  where?: Prisma.buildingWhereInput
+  data: Prisma.XOR<Prisma.buildingUpdateWithoutMeetingsInput, Prisma.buildingUncheckedUpdateWithoutMeetingsInput>
+}
+
+export type buildingUpdateWithoutMeetingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.companyUpdateOneRequiredWithoutBuildingsNestedInput
+  premises?: Prisma.premiseUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingUncheckedUpdateWithoutMeetingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  premises?: Prisma.premiseUncheckedUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUncheckedUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingCreateManyCompanyInput = {
+  id?: string
+  address: string
+  cadastralNumber: string
+  yearBuilt?: number | null
+  floors?: number | null
+  entrances?: number | null
+  totalArea: number
+  totalPremises: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type buildingUpdateWithoutCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  premises?: Prisma.premiseUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingUncheckedUpdateWithoutCompanyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  yearBuilt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  floors?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  entrances?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalArea?: Prisma.FloatFieldUpdateOperationsInput | number
+  totalPremises?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  premises?: Prisma.premiseUncheckedUpdateManyWithoutBuildingNestedInput
+  employeeAccess?: Prisma.employeeBuildingAccessUncheckedUpdateManyWithoutBuildingNestedInput
+  registryVersions?: Prisma.registryVersionUncheckedUpdateManyWithoutBuildingNestedInput
+  meetings?: Prisma.meetingUncheckedUpdateManyWithoutBuildingNestedInput
+}
+
+export type buildingUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   cadastralNumber?: Prisma.StringFieldUpdateOperationsInput | string
@@ -616,10 +1151,16 @@ export type buildingUncheckedUpdateWithoutPremisesInput = {
 
 export type BuildingCountOutputType = {
   premises: number
+  employeeAccess: number
+  registryVersions: number
+  meetings: number
 }
 
 export type BuildingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   premises?: boolean | BuildingCountOutputTypeCountPremisesArgs
+  employeeAccess?: boolean | BuildingCountOutputTypeCountEmployeeAccessArgs
+  registryVersions?: boolean | BuildingCountOutputTypeCountRegistryVersionsArgs
+  meetings?: boolean | BuildingCountOutputTypeCountMeetingsArgs
 }
 
 /**
@@ -639,9 +1180,31 @@ export type BuildingCountOutputTypeCountPremisesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.premiseWhereInput
 }
 
+/**
+ * BuildingCountOutputType without action
+ */
+export type BuildingCountOutputTypeCountEmployeeAccessArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.employeeBuildingAccessWhereInput
+}
+
+/**
+ * BuildingCountOutputType without action
+ */
+export type BuildingCountOutputTypeCountRegistryVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.registryVersionWhereInput
+}
+
+/**
+ * BuildingCountOutputType without action
+ */
+export type BuildingCountOutputTypeCountMeetingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.meetingWhereInput
+}
+
 
 export type buildingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  companyId?: boolean
   address?: boolean
   cadastralNumber?: boolean
   yearBuilt?: boolean
@@ -651,7 +1214,11 @@ export type buildingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   totalPremises?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
   premises?: boolean | Prisma.building$premisesArgs<ExtArgs>
+  employeeAccess?: boolean | Prisma.building$employeeAccessArgs<ExtArgs>
+  registryVersions?: boolean | Prisma.building$registryVersionsArgs<ExtArgs>
+  meetings?: boolean | Prisma.building$meetingsArgs<ExtArgs>
   _count?: boolean | Prisma.BuildingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["building"]>
 
@@ -659,6 +1226,7 @@ export type buildingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 
 export type buildingSelectScalar = {
   id?: boolean
+  companyId?: boolean
   address?: boolean
   cadastralNumber?: boolean
   yearBuilt?: boolean
@@ -670,19 +1238,28 @@ export type buildingSelectScalar = {
   updatedAt?: boolean
 }
 
-export type buildingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "cadastralNumber" | "yearBuilt" | "floors" | "entrances" | "totalArea" | "totalPremises" | "createdAt" | "updatedAt", ExtArgs["result"]["building"]>
+export type buildingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "address" | "cadastralNumber" | "yearBuilt" | "floors" | "entrances" | "totalArea" | "totalPremises" | "createdAt" | "updatedAt", ExtArgs["result"]["building"]>
 export type buildingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  company?: boolean | Prisma.companyDefaultArgs<ExtArgs>
   premises?: boolean | Prisma.building$premisesArgs<ExtArgs>
+  employeeAccess?: boolean | Prisma.building$employeeAccessArgs<ExtArgs>
+  registryVersions?: boolean | Prisma.building$registryVersionsArgs<ExtArgs>
+  meetings?: boolean | Prisma.building$meetingsArgs<ExtArgs>
   _count?: boolean | Prisma.BuildingCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $buildingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "building"
   objects: {
+    company: Prisma.$companyPayload<ExtArgs>
     premises: Prisma.$premisePayload<ExtArgs>[]
+    employeeAccess: Prisma.$employeeBuildingAccessPayload<ExtArgs>[]
+    registryVersions: Prisma.$registryVersionPayload<ExtArgs>[]
+    meetings: Prisma.$meetingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    companyId: string
     address: string
     cadastralNumber: string
     yearBuilt: number | null
@@ -1032,7 +1609,11 @@ readonly fields: buildingFieldRefs;
  */
 export interface Prisma__buildingClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  company<T extends Prisma.companyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.companyDefaultArgs<ExtArgs>>): Prisma.Prisma__companyClient<runtime.Types.Result.GetResult<Prisma.$companyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   premises<T extends Prisma.building$premisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.building$premisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$premisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employeeAccess<T extends Prisma.building$employeeAccessArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.building$employeeAccessArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$employeeBuildingAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registryVersions<T extends Prisma.building$registryVersionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.building$registryVersionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$registryVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  meetings<T extends Prisma.building$meetingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.building$meetingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$meetingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1063,6 +1644,7 @@ export interface Prisma__buildingClient<T, Null = never, ExtArgs extends runtime
  */
 export interface buildingFieldRefs {
   readonly id: Prisma.FieldRef<"building", 'String'>
+  readonly companyId: Prisma.FieldRef<"building", 'String'>
   readonly address: Prisma.FieldRef<"building", 'String'>
   readonly cadastralNumber: Prisma.FieldRef<"building", 'String'>
   readonly yearBuilt: Prisma.FieldRef<"building", 'Int'>
@@ -1435,6 +2017,78 @@ export type building$premisesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.PremiseScalarFieldEnum | Prisma.PremiseScalarFieldEnum[]
+}
+
+/**
+ * building.employeeAccess
+ */
+export type building$employeeAccessArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the employeeBuildingAccess
+   */
+  select?: Prisma.employeeBuildingAccessSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the employeeBuildingAccess
+   */
+  omit?: Prisma.employeeBuildingAccessOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.employeeBuildingAccessInclude<ExtArgs> | null
+  where?: Prisma.employeeBuildingAccessWhereInput
+  orderBy?: Prisma.employeeBuildingAccessOrderByWithRelationInput | Prisma.employeeBuildingAccessOrderByWithRelationInput[]
+  cursor?: Prisma.employeeBuildingAccessWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeBuildingAccessScalarFieldEnum | Prisma.EmployeeBuildingAccessScalarFieldEnum[]
+}
+
+/**
+ * building.registryVersions
+ */
+export type building$registryVersionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the registryVersion
+   */
+  select?: Prisma.registryVersionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the registryVersion
+   */
+  omit?: Prisma.registryVersionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.registryVersionInclude<ExtArgs> | null
+  where?: Prisma.registryVersionWhereInput
+  orderBy?: Prisma.registryVersionOrderByWithRelationInput | Prisma.registryVersionOrderByWithRelationInput[]
+  cursor?: Prisma.registryVersionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistryVersionScalarFieldEnum | Prisma.RegistryVersionScalarFieldEnum[]
+}
+
+/**
+ * building.meetings
+ */
+export type building$meetingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the meeting
+   */
+  select?: Prisma.meetingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the meeting
+   */
+  omit?: Prisma.meetingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.meetingInclude<ExtArgs> | null
+  where?: Prisma.meetingWhereInput
+  orderBy?: Prisma.meetingOrderByWithRelationInput | Prisma.meetingOrderByWithRelationInput[]
+  cursor?: Prisma.meetingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MeetingScalarFieldEnum | Prisma.MeetingScalarFieldEnum[]
 }
 
 /**

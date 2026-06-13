@@ -18,6 +18,21 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model company
+ * 
+ */
+export type company = Prisma.companyModel
+/**
+ * Model employee
+ * 
+ */
+export type employee = Prisma.employeeModel
+/**
+ * Model employeeBuildingAccess
+ * 
+ */
+export type employeeBuildingAccess = Prisma.employeeBuildingAccessModel
+/**
  * Model building
  * 
  */
@@ -27,3 +42,83 @@ export type building = Prisma.buildingModel
  * 
  */
 export type premise = Prisma.premiseModel
+/**
+ * Model owner
+ * 
+ */
+export type owner = Prisma.ownerModel
+/**
+ * Model ownership
+ * 
+ */
+export type ownership = Prisma.ownershipModel
+/**
+ * Model contact
+ * 
+ */
+export type contact = Prisma.contactModel
+/**
+ * Model representative
+ * 
+ */
+export type representative = Prisma.representativeModel
+/**
+ * Model registryVersion
+ * 
+ */
+export type registryVersion = Prisma.registryVersionModel
+/**
+ * Model registryImport
+ * 
+ */
+export type registryImport = Prisma.registryImportModel
+/**
+ * Model meeting
+ * 
+ */
+export type meeting = Prisma.meetingModel
+/**
+ * Model questionLibrary
+ * 
+ */
+export type questionLibrary = Prisma.questionLibraryModel
+/**
+ * Model agendaItem
+ * 
+ */
+export type agendaItem = Prisma.agendaItemModel
+/**
+ * Model documentTemplate
+ * 
+ */
+export type documentTemplate = Prisma.documentTemplateModel
+/**
+ * Model ballot
+ * 
+ */
+export type ballot = Prisma.ballotModel
+/**
+ * Model votingLink
+ * 
+ */
+export type votingLink = Prisma.votingLinkModel
+/**
+ * Model votingSession
+ * 
+ */
+export type votingSession = Prisma.votingSessionModel
+/**
+ * Model questionAnswer
+ * 
+ */
+export type questionAnswer = Prisma.questionAnswerModel
+/**
+ * Model quorumResult
+ * 
+ */
+export type quorumResult = Prisma.quorumResultModel
+/**
+ * Model generatedDocument
+ * 
+ */
+export type generatedDocument = Prisma.generatedDocumentModel

@@ -241,6 +241,7 @@ export type premiseWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"premise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"premise"> | Date | string
   building?: Prisma.XOR<Prisma.BuildingScalarRelationFilter, Prisma.buildingWhereInput>
+  ownerships?: Prisma.OwnershipListRelationFilter
 }
 
 export type premiseOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type premiseOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   building?: Prisma.buildingOrderByWithRelationInput
+  ownerships?: Prisma.ownershipOrderByRelationAggregateInput
 }
 
 export type premiseWhereUniqueInput = Prisma.AtLeast<{
@@ -268,6 +270,7 @@ export type premiseWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"premise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"premise"> | Date | string
   building?: Prisma.XOR<Prisma.BuildingScalarRelationFilter, Prisma.buildingWhereInput>
+  ownerships?: Prisma.OwnershipListRelationFilter
 }, "id" | "cadastralNumber">
 
 export type premiseOrderByWithAggregationInput = {
@@ -309,6 +312,7 @@ export type premiseCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   building: Prisma.buildingCreateNestedOneWithoutPremisesInput
+  ownerships?: Prisma.ownershipCreateNestedManyWithoutPremiseInput
 }
 
 export type premiseUncheckedCreateInput = {
@@ -320,6 +324,7 @@ export type premiseUncheckedCreateInput = {
   ownershipForm: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  ownerships?: Prisma.ownershipUncheckedCreateNestedManyWithoutPremiseInput
 }
 
 export type premiseUpdateInput = {
@@ -331,6 +336,7 @@ export type premiseUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   building?: Prisma.buildingUpdateOneRequiredWithoutPremisesNestedInput
+  ownerships?: Prisma.ownershipUpdateManyWithoutPremiseNestedInput
 }
 
 export type premiseUncheckedUpdateInput = {
@@ -342,6 +348,7 @@ export type premiseUncheckedUpdateInput = {
   ownershipForm?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerships?: Prisma.ownershipUncheckedUpdateManyWithoutPremiseNestedInput
 }
 
 export type premiseCreateManyInput = {
@@ -427,6 +434,11 @@ export type premiseSumOrderByAggregateInput = {
   area?: Prisma.SortOrder
 }
 
+export type PremiseScalarRelationFilter = {
+  is?: Prisma.premiseWhereInput
+  isNot?: Prisma.premiseWhereInput
+}
+
 export type premiseCreateNestedManyWithoutBuildingInput = {
   create?: Prisma.XOR<Prisma.premiseCreateWithoutBuildingInput, Prisma.premiseUncheckedCreateWithoutBuildingInput> | Prisma.premiseCreateWithoutBuildingInput[] | Prisma.premiseUncheckedCreateWithoutBuildingInput[]
   connectOrCreate?: Prisma.premiseCreateOrConnectWithoutBuildingInput | Prisma.premiseCreateOrConnectWithoutBuildingInput[]
@@ -469,8 +481,18 @@ export type premiseUncheckedUpdateManyWithoutBuildingNestedInput = {
   deleteMany?: Prisma.premiseScalarWhereInput | Prisma.premiseScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type premiseCreateNestedOneWithoutOwnershipsInput = {
+  create?: Prisma.XOR<Prisma.premiseCreateWithoutOwnershipsInput, Prisma.premiseUncheckedCreateWithoutOwnershipsInput>
+  connectOrCreate?: Prisma.premiseCreateOrConnectWithoutOwnershipsInput
+  connect?: Prisma.premiseWhereUniqueInput
+}
+
+export type premiseUpdateOneRequiredWithoutOwnershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.premiseCreateWithoutOwnershipsInput, Prisma.premiseUncheckedCreateWithoutOwnershipsInput>
+  connectOrCreate?: Prisma.premiseCreateOrConnectWithoutOwnershipsInput
+  upsert?: Prisma.premiseUpsertWithoutOwnershipsInput
+  connect?: Prisma.premiseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.premiseUpdateToOneWithWhereWithoutOwnershipsInput, Prisma.premiseUpdateWithoutOwnershipsInput>, Prisma.premiseUncheckedUpdateWithoutOwnershipsInput>
 }
 
 export type premiseCreateWithoutBuildingInput = {
@@ -481,6 +503,7 @@ export type premiseCreateWithoutBuildingInput = {
   ownershipForm: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  ownerships?: Prisma.ownershipCreateNestedManyWithoutPremiseInput
 }
 
 export type premiseUncheckedCreateWithoutBuildingInput = {
@@ -491,6 +514,7 @@ export type premiseUncheckedCreateWithoutBuildingInput = {
   ownershipForm: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  ownerships?: Prisma.ownershipUncheckedCreateNestedManyWithoutPremiseInput
 }
 
 export type premiseCreateOrConnectWithoutBuildingInput = {
@@ -532,6 +556,66 @@ export type premiseScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"premise"> | Date | string
 }
 
+export type premiseCreateWithoutOwnershipsInput = {
+  id?: string
+  number: string
+  cadastralNumber?: string | null
+  area: number
+  ownershipForm: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  building: Prisma.buildingCreateNestedOneWithoutPremisesInput
+}
+
+export type premiseUncheckedCreateWithoutOwnershipsInput = {
+  id?: string
+  buildingId: string
+  number: string
+  cadastralNumber?: string | null
+  area: number
+  ownershipForm: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type premiseCreateOrConnectWithoutOwnershipsInput = {
+  where: Prisma.premiseWhereUniqueInput
+  create: Prisma.XOR<Prisma.premiseCreateWithoutOwnershipsInput, Prisma.premiseUncheckedCreateWithoutOwnershipsInput>
+}
+
+export type premiseUpsertWithoutOwnershipsInput = {
+  update: Prisma.XOR<Prisma.premiseUpdateWithoutOwnershipsInput, Prisma.premiseUncheckedUpdateWithoutOwnershipsInput>
+  create: Prisma.XOR<Prisma.premiseCreateWithoutOwnershipsInput, Prisma.premiseUncheckedCreateWithoutOwnershipsInput>
+  where?: Prisma.premiseWhereInput
+}
+
+export type premiseUpdateToOneWithWhereWithoutOwnershipsInput = {
+  where?: Prisma.premiseWhereInput
+  data: Prisma.XOR<Prisma.premiseUpdateWithoutOwnershipsInput, Prisma.premiseUncheckedUpdateWithoutOwnershipsInput>
+}
+
+export type premiseUpdateWithoutOwnershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  area?: Prisma.FloatFieldUpdateOperationsInput | number
+  ownershipForm?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  building?: Prisma.buildingUpdateOneRequiredWithoutPremisesNestedInput
+}
+
+export type premiseUncheckedUpdateWithoutOwnershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  buildingId?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  cadastralNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  area?: Prisma.FloatFieldUpdateOperationsInput | number
+  ownershipForm?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type premiseCreateManyBuildingInput = {
   id?: string
   number: string
@@ -550,6 +634,7 @@ export type premiseUpdateWithoutBuildingInput = {
   ownershipForm?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerships?: Prisma.ownershipUpdateManyWithoutPremiseNestedInput
 }
 
 export type premiseUncheckedUpdateWithoutBuildingInput = {
@@ -560,6 +645,7 @@ export type premiseUncheckedUpdateWithoutBuildingInput = {
   ownershipForm?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerships?: Prisma.ownershipUncheckedUpdateManyWithoutPremiseNestedInput
 }
 
 export type premiseUncheckedUpdateManyWithoutBuildingInput = {
@@ -573,6 +659,35 @@ export type premiseUncheckedUpdateManyWithoutBuildingInput = {
 }
 
 
+/**
+ * Count Type PremiseCountOutputType
+ */
+
+export type PremiseCountOutputType = {
+  ownerships: number
+}
+
+export type PremiseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ownerships?: boolean | PremiseCountOutputTypeCountOwnershipsArgs
+}
+
+/**
+ * PremiseCountOutputType without action
+ */
+export type PremiseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PremiseCountOutputType
+   */
+  select?: Prisma.PremiseCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PremiseCountOutputType without action
+ */
+export type PremiseCountOutputTypeCountOwnershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ownershipWhereInput
+}
+
 
 export type premiseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -584,6 +699,8 @@ export type premiseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   building?: boolean | Prisma.buildingDefaultArgs<ExtArgs>
+  ownerships?: boolean | Prisma.premise$ownershipsArgs<ExtArgs>
+  _count?: boolean | Prisma.PremiseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["premise"]>
 
 
@@ -602,12 +719,15 @@ export type premiseSelectScalar = {
 export type premiseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "buildingId" | "number" | "cadastralNumber" | "area" | "ownershipForm" | "createdAt" | "updatedAt", ExtArgs["result"]["premise"]>
 export type premiseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   building?: boolean | Prisma.buildingDefaultArgs<ExtArgs>
+  ownerships?: boolean | Prisma.premise$ownershipsArgs<ExtArgs>
+  _count?: boolean | Prisma.PremiseCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $premisePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "premise"
   objects: {
     building: Prisma.$buildingPayload<ExtArgs>
+    ownerships: Prisma.$ownershipPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -959,6 +1079,7 @@ readonly fields: premiseFieldRefs;
 export interface Prisma__premiseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   building<T extends Prisma.buildingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.buildingDefaultArgs<ExtArgs>>): Prisma.Prisma__buildingClient<runtime.Types.Result.GetResult<Prisma.$buildingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  ownerships<T extends Prisma.premise$ownershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.premise$ownershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ownershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1335,6 +1456,30 @@ export type premiseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many premises to delete.
    */
   limit?: number
+}
+
+/**
+ * premise.ownerships
+ */
+export type premise$ownershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ownership
+   */
+  select?: Prisma.ownershipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ownership
+   */
+  omit?: Prisma.ownershipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ownershipInclude<ExtArgs> | null
+  where?: Prisma.ownershipWhereInput
+  orderBy?: Prisma.ownershipOrderByWithRelationInput | Prisma.ownershipOrderByWithRelationInput[]
+  cursor?: Prisma.ownershipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnershipScalarFieldEnum | Prisma.OwnershipScalarFieldEnum[]
 }
 
 /**

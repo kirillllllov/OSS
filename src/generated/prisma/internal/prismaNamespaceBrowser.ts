@@ -49,8 +49,27 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 export const ModelName = {
+  company: 'company',
+  employee: 'employee',
+  employeeBuildingAccess: 'employeeBuildingAccess',
   building: 'building',
-  premise: 'premise'
+  premise: 'premise',
+  owner: 'owner',
+  ownership: 'ownership',
+  contact: 'contact',
+  representative: 'representative',
+  registryVersion: 'registryVersion',
+  registryImport: 'registryImport',
+  meeting: 'meeting',
+  questionLibrary: 'questionLibrary',
+  agendaItem: 'agendaItem',
+  documentTemplate: 'documentTemplate',
+  ballot: 'ballot',
+  votingLink: 'votingLink',
+  votingSession: 'votingSession',
+  questionAnswer: 'questionAnswer',
+  quorumResult: 'quorumResult',
+  generatedDocument: 'generatedDocument'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,8 +89,50 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  inn: 'inn',
+  ogrn: 'ogrn',
+  email: 'email',
+  phone: 'phone',
+  tariff: 'tariff',
+  active: 'active',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
+
+
+export const EmployeeScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  secret2fa: 'secret2fa',
+  fullName: 'fullName',
+  role: 'role',
+  active: 'active',
+  lastLogin: 'lastLogin',
+  lastIp: 'lastIp',
+  createdAt: 'createdAt'
+} as const
+
+export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+export const EmployeeBuildingAccessScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  buildingId: 'buildingId'
+} as const
+
+export type EmployeeBuildingAccessScalarFieldEnum = (typeof EmployeeBuildingAccessScalarFieldEnum)[keyof typeof EmployeeBuildingAccessScalarFieldEnum]
+
+
 export const BuildingScalarFieldEnum = {
   id: 'id',
+  companyId: 'companyId',
   address: 'address',
   cadastralNumber: 'cadastralNumber',
   yearBuilt: 'yearBuilt',
@@ -98,6 +159,232 @@ export const PremiseScalarFieldEnum = {
 } as const
 
 export type PremiseScalarFieldEnum = (typeof PremiseScalarFieldEnum)[keyof typeof PremiseScalarFieldEnum]
+
+
+export const OwnerScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  inn: 'inn',
+  snils: 'snils',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OwnerScalarFieldEnum = (typeof OwnerScalarFieldEnum)[keyof typeof OwnerScalarFieldEnum]
+
+
+export const OwnershipScalarFieldEnum = {
+  id: 'id',
+  premiseId: 'premiseId',
+  ownerId: 'ownerId',
+  share: 'share',
+  shareArea: 'shareArea',
+  titleDocument: 'titleDocument',
+  regDate: 'regDate',
+  basisDocument: 'basisDocument'
+} as const
+
+export type OwnershipScalarFieldEnum = (typeof OwnershipScalarFieldEnum)[keyof typeof OwnershipScalarFieldEnum]
+
+
+export const ContactScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  type: 'type',
+  value: 'value',
+  forNotify: 'forNotify'
+} as const
+
+export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const RepresentativeScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  fullName: 'fullName',
+  proxyNumber: 'proxyNumber',
+  issuedAt: 'issuedAt',
+  expiresAt: 'expiresAt',
+  scanPath: 'scanPath'
+} as const
+
+export type RepresentativeScalarFieldEnum = (typeof RepresentativeScalarFieldEnum)[keyof typeof RepresentativeScalarFieldEnum]
+
+
+export const RegistryVersionScalarFieldEnum = {
+  id: 'id',
+  buildingId: 'buildingId',
+  versionNumber: 'versionNumber',
+  formedAt: 'formedAt',
+  source: 'source',
+  comment: 'comment'
+} as const
+
+export type RegistryVersionScalarFieldEnum = (typeof RegistryVersionScalarFieldEnum)[keyof typeof RegistryVersionScalarFieldEnum]
+
+
+export const RegistryImportScalarFieldEnum = {
+  id: 'id',
+  buildingId: 'buildingId',
+  filePath: 'filePath',
+  status: 'status',
+  importedByEmployeeId: 'importedByEmployeeId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistryImportScalarFieldEnum = (typeof RegistryImportScalarFieldEnum)[keyof typeof RegistryImportScalarFieldEnum]
+
+
+export const MeetingScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  buildingId: 'buildingId',
+  registryVersionId: 'registryVersionId',
+  initiatorEmployeeId: 'initiatorEmployeeId',
+  number: 'number',
+  form: 'form',
+  status: 'status',
+  dateStart: 'dateStart',
+  dateEnd: 'dateEnd',
+  inPersonAddress: 'inPersonAddress',
+  ballotAcceptAddress: 'ballotAcceptAddress',
+  noticeAddress: 'noticeAddress',
+  resultDate: 'resultDate',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  activatedAt: 'activatedAt',
+  completedAt: 'completedAt',
+  archivedAt: 'archivedAt',
+  quorumPercent: 'quorumPercent',
+  requiresGis: 'requiresGis'
+} as const
+
+export type MeetingScalarFieldEnum = (typeof MeetingScalarFieldEnum)[keyof typeof MeetingScalarFieldEnum]
+
+
+export const QuestionLibraryScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  shortTitle: 'shortTitle',
+  protocolText: 'protocolText',
+  bulletinText: 'bulletinText',
+  quorumType: 'quorumType',
+  category: 'category',
+  tags: 'tags',
+  createdByEmployeeId: 'createdByEmployeeId',
+  createdAt: 'createdAt'
+} as const
+
+export type QuestionLibraryScalarFieldEnum = (typeof QuestionLibraryScalarFieldEnum)[keyof typeof QuestionLibraryScalarFieldEnum]
+
+
+export const AgendaItemScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  questionId: 'questionId',
+  orderNumber: 'orderNumber',
+  customProtocolText: 'customProtocolText',
+  customBulletinText: 'customBulletinText',
+  decisionType: 'decisionType',
+  acceptPercent: 'acceptPercent'
+} as const
+
+export type AgendaItemScalarFieldEnum = (typeof AgendaItemScalarFieldEnum)[keyof typeof AgendaItemScalarFieldEnum]
+
+
+export const DocumentTemplateScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  documentType: 'documentType',
+  name: 'name',
+  filePath: 'filePath',
+  version: 'version',
+  active: 'active'
+} as const
+
+export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
+
+
+export const BallotScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  ownershipId: 'ownershipId',
+  representativeId: 'representativeId',
+  createdByEmployeeId: 'createdByEmployeeId',
+  replacedByBallotId: 'replacedByBallotId',
+  received: 'received',
+  deliveryMethod: 'deliveryMethod',
+  status: 'status',
+  invalidReason: 'invalidReason',
+  invalidNote: 'invalidNote',
+  scanPath: 'scanPath',
+  manualEntry: 'manualEntry',
+  createdAt: 'createdAt'
+} as const
+
+export type BallotScalarFieldEnum = (typeof BallotScalarFieldEnum)[keyof typeof BallotScalarFieldEnum]
+
+
+export const VotingLinkScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  ownershipId: 'ownershipId',
+  token: 'token',
+  validUntil: 'validUntil',
+  used: 'used'
+} as const
+
+export type VotingLinkScalarFieldEnum = (typeof VotingLinkScalarFieldEnum)[keyof typeof VotingLinkScalarFieldEnum]
+
+
+export const VotingSessionScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  ownershipId: 'ownershipId',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type VotingSessionScalarFieldEnum = (typeof VotingSessionScalarFieldEnum)[keyof typeof VotingSessionScalarFieldEnum]
+
+
+export const QuestionAnswerScalarFieldEnum = {
+  id: 'id',
+  ballotId: 'ballotId',
+  agendaItemId: 'agendaItemId',
+  vote: 'vote',
+  source: 'source'
+} as const
+
+export type QuestionAnswerScalarFieldEnum = (typeof QuestionAnswerScalarFieldEnum)[keyof typeof QuestionAnswerScalarFieldEnum]
+
+
+export const QuorumResultScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  totalArea: 'totalArea',
+  participatingArea: 'participatingArea',
+  participationPercent: 'participationPercent',
+  quorumReached: 'quorumReached',
+  calculatedAt: 'calculatedAt'
+} as const
+
+export type QuorumResultScalarFieldEnum = (typeof QuorumResultScalarFieldEnum)[keyof typeof QuorumResultScalarFieldEnum]
+
+
+export const GeneratedDocumentScalarFieldEnum = {
+  id: 'id',
+  meetingId: 'meetingId',
+  documentType: 'documentType',
+  version: 'version',
+  generatedAt: 'generatedAt',
+  createdByEmployeeId: 'createdByEmployeeId',
+  filePath: 'filePath',
+  isFinal: 'isFinal'
+} as const
+
+export type GeneratedDocumentScalarFieldEnum = (typeof GeneratedDocumentScalarFieldEnum)[keyof typeof GeneratedDocumentScalarFieldEnum]
 
 
 export const SortOrder = {
