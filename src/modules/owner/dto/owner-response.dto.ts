@@ -5,5 +5,5 @@ export class OwnerResponseDto {
   @ApiProperty() fullName: string;
   @ApiPropertyOptional() inn?: string;
   @ApiPropertyOptional() snils?: string;
-  @ApiProperty() updatedAt: Date;
+  @ApiPropertyOptional() contactInfo?: string;
 }

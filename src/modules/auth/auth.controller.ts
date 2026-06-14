@@ -1,32 +1,42 @@
-import { Controller, Post, Body, Req, Get, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Controller, Post, Body, Request, UseGuards, Get, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CurrentEmployee } from './decorators/current-employee.decorator';
-import { EmployeeResponseDto } from '../employee/dto/employee-response.dto';
+import { SessionGuard } from './guards/session.guard';
 
-@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Post('login')
-  @ApiOperation({ summary: 'Вход в систему' })
-  @ApiResponse({ status: 200, type: AuthResponseDto })
-  login(@Body() dto: LoginDto, @Req() req: Request): Promise<AuthResponseDto> {
-    const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
-    return this.authService.login(dto, ip);
+  async login(@Request() req, @Body() loginDto: LoginDto) {
+    const employee = await this.authService.validateEmployee(loginDto.email, loginDto.password);
+    if (!employee) throw new UnauthorizedException('Неверный email или пароль');
+    // Сохраняем в сессию
+    req.session.employeeId = employee.id;
+    req.session.role = employee.role;
+    return {
+      message: 'Успешный вход',
+      employee: {
+        id: employee.id,
+        email: employee.email,
+        fullName: employee.fullName,
+        role: employee.role,
+      },
+    };
+  }
+
+  @Post('logout')
+  async logout(@Request() req) {
+    req.session.destroy((err) => {
+      if (err) throw new Error('Ошибка выхода');
+    });
+    return { message: 'Выход выполнен' };
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Текущий сотрудник' })
-  @ApiResponse({ status: 200, type: EmployeeResponseDto })
-  me(@CurrentEmployee() user: any): any {
-    return user;
+  @UseGuards(SessionGuard)
+  async getMe(@Request() req) {
+    // req.user заполняется в SessionGuard (см. ниже)
+    return req.user;
   }
 }

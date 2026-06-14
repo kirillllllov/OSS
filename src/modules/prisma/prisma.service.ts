@@ -16,4 +16,7 @@ export class PrismaService extends ExtendablePrismaClient implements OnModuleIni
       this.logger.warn('API server is running, but database operations will fail until a connection is established.');
     }
   }
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
 }

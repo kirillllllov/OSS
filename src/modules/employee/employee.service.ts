@@ -52,8 +52,8 @@ export class EmployeeService {
     await this.repo.delete(id);
   }
 
-  async recordLogin(id: string, ip: string): Promise<void> {
-    await this.repo.update(id, { lastLogin: new Date(), lastIp: ip });
+  async recordLogin(id: string): Promise<void> {
+    await this.repo.update(id, { lastLogin: new Date()});
   }
 
   private toDto(e: any): EmployeeResponseDto {

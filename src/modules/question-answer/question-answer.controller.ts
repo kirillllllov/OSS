@@ -20,10 +20,10 @@ export class QuestionAnswerController {
   @Get()
   @ApiOperation({ summary: 'Список ответов' })
   @ApiResponse({ status: 200, type: [QuestionAnswerResponseDto] })
-  @ApiQuery({ name: 'ballotId', required: false })
+  @ApiQuery({ name: 'ownerId', required: false })
   @ApiQuery({ name: 'agendaItemId', required: false })
-  findAll(@Query('ballotId') ballotId?: string, @Query('agendaItemId') agendaItemId?: string): Promise<QuestionAnswerResponseDto[]> {
-    return this.svc.findAll(ballotId, agendaItemId);
+  findAll(@Query('ownerId') ownerId?: string, @Query('agendaItemId') agendaItemId?: string): Promise<QuestionAnswerResponseDto[]> {
+    return this.svc.findAll(ownerId, agendaItemId);
   }
 
   @Get(':id')

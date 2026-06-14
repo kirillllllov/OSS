@@ -29,7 +29,7 @@ export class EmployeeRepository {
 
   update(id: string, data: Partial<{
     fullName: string; role: string; active: boolean; passwordHash: string;
-    lastLogin: Date; lastIp: string;
+    lastLogin: Date; 
   }>) {
     return this.prisma.employee.update({ where: { id }, data });
   }

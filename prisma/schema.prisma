@@ -1,358 +1,171 @@
 generator client {
-  provider     = "prisma-client"
-  output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlserver"
-  url      = env("MSSQL_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
-// ─── Компания (УК) ───────────────────────────────────────────────────────────
-model company {
-  id        String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  name      String   @db.NVarChar(500)
-  inn       String?  @db.NVarChar(12)
-  ogrn      String?  @db.NVarChar(15)
-  email     String?  @db.NVarChar(255)
-  phone     String?  @db.NVarChar(20)
-  tariff    String   @default("basic") @db.NVarChar(50)
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
+model Building {
+  id               String    @id @default(uuid())
+  address          String
+  cadastralNumber  String
+  yearBuilt        Int?
+  floors           Int?
+  entrances        Int?
+  totalArea        Float
+  totalPremises    Int
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  employees        employee[]
-  buildings        building[]
-  questionLibrary  questionLibrary[]
-  documentTemplate documentTemplate[]
-  meetings         meeting[]
+  premises         Premise[]
+  employeeAccess   EmployeeBuildingAccess[]
+  meetings         Meeting[]
 }
 
-// ─── Сотрудник ───────────────────────────────────────────────────────────────
-model employee {
-  id             String    @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  companyId      String    @db.UniqueIdentifier
-  email          String    @unique @db.NVarChar(255)
-  passwordHash   String    @db.NVarChar(255)
-  secret2fa      String?   @db.NVarChar(255)
-  fullName       String    @db.NVarChar(500)
-  role           String    @default("manager") @db.NVarChar(50)
-  active         Boolean   @default(true)
-  lastLogin      DateTime?
-  lastIp         String?   @db.NVarChar(45)
-  createdAt      DateTime  @default(now())
+model Premise {
+  id                String   @id @default(uuid())
+  buildingId        String
+  number            String
+  cadastralNumber   String?
+  area              Float
+  ownershipForm     String
 
-  company               company                @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  buildingAccess        employeeBuildingAccess[]
-  importedRegistries    registryImport[]
-  createdBallots        ballot[]               @relation("BallotCreatedBy")
-  initiatedMeetings     meeting[]              @relation("MeetingInitiator")
-  createdQuestions      questionLibrary[]
+  building          Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  ownershipRights   OwnershipRight[]
+}
+model Owner {
+  id                String   @id @default(uuid())
+  fullName          String
+  inn               String?  @unique
+  snils             String?  @unique
+  contacts          String?  @unique
+
+  ownershipRights   OwnershipRight[]
+  answers           QuestionAnswer[]
 }
 
-// ─── Доступ сотрудника к дому ────────────────────────────────────────────────
-model employeeBuildingAccess {
-  id         String @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  employeeId String @db.UniqueIdentifier
-  buildingId String @db.UniqueIdentifier
+model OwnershipRight {
+  id                    String   @id @default(uuid())
+  premiseId             String
+  ownerId               String
+  share                 String?
+  shareArea             Float?
+  titleDocument         String?
+  registrationDate      String?
+  basisDocument         String?
 
-  employee employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  building building @relation(fields: [buildingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  premise               Premise  @relation(fields: [premiseId], references: [id], onDelete: Cascade)
+  owner                 Owner    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  @@unique([employeeId, buildingId])
+  @@unique([premiseId, ownerId])
 }
 
-// ─── Дом ─────────────────────────────────────────────────────────────────────
-model building {
-  id              String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  companyId       String   @db.UniqueIdentifier
-  address         String   @db.NVarChar(1000)
-  cadastralNumber String   @unique @db.NVarChar(100)
-  yearBuilt       Int?
-  floors          Int?
-  entrances       Int?
-  totalArea       Float
-  totalPremises   Int
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+model Employee {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  passwordHash          String
+  fullName              String
+  role                  String
+  isActive              Int       @default(1)
+  lastLogin             String?
+  createdAt             DateTime  @default(now())
 
-  company         company                  @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  premises        premise[]
-  employeeAccess  employeeBuildingAccess[]
-  registryVersions registryVersion[]
-  meetings        meeting[]
+  buildingAccess        EmployeeBuildingAccess[]
+  createdQuestions      QuestionLibrary[]    @relation("CreatedBy")
+  initiatedMeetings     Meeting[]            @relation("Initiator")
+  auditLogs             AuditLog[]
 }
 
-// ─── Помещение ────────────────────────────────────────────────────────────────
-model premise {
-  id              String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  buildingId      String   @db.UniqueIdentifier
-  number          String   @db.NVarChar(50)
-  cadastralNumber String?  @unique @db.NVarChar(100)
-  area            Float
-  ownershipForm   String   @db.NVarChar(50)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+model EmployeeBuildingAccess {
+  employeeId   String
+  buildingId   String
 
-  building   building    @relation(fields: [buildingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  ownerships ownership[]
+  employee     Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  building     Building  @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@id([employeeId, buildingId])
 }
 
-// ─── Собственник ─────────────────────────────────────────────────────────────
-model owner {
-  id        String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  fullName  String   @db.NVarChar(500)
-  inn       String?  @db.NVarChar(12)
-  snils     String?  @db.NVarChar(14)
-  updatedAt DateTime @updatedAt
+model QuestionLibrary {
+  id                  String    @id @default(uuid())
+  shortTitle          String
+  protocolText        String?
+  bulletinText        String?
+  quorumType          String?
+  category            String?
+  tags                String?
+  createdByEmployeeId String?
+  createdAt           DateTime  @default(now())
 
-  ownerships      ownership[]
-  contacts        contact[]
-  representatives representative[]
+  createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id])
+  agendaItems         AgendaItem[]
 }
 
-// ─── Право собственности ─────────────────────────────────────────────────────
-model ownership {
-  id               String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  premiseId        String   @db.UniqueIdentifier
-  ownerId          String   @db.UniqueIdentifier
-  share            String   @db.NVarChar(50)
-  shareArea        Float
-  titleDocument    String   @db.NVarChar(500)
-  regDate          DateTime
-  basisDocument    String?  @db.NVarChar(500)
+model Meeting {
+  id                      String    @id @default(uuid())
+  buildingId              String
+  number                  String
+  status                  String    @default("С‡РµСЂРЅРѕРІРёРє")
+  form                    String
+  startDate               String
+  endDate                 String?
+  inPersonStartTime       String?
+  inPersonAddress         String?
+  ballotAcceptanceAddress String?
+  noticeAddress           String?
+  resultsDate             String?
+  initiatorEmployeeId     String?
+  extensionReason         String?
+  createdAt               DateTime  @default(now())
+  activatedAt             String?
+  completedAt             String?
+  archivedAt              String?
 
-  premise      premise       @relation(fields: [premiseId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  owner        owner         @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ballots      ballot[]
-  votingLinks  votingLink[]
-  votingSessions votingSession[]
+  building                Building   @relation(fields: [buildingId], references: [id])
+  initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id])
+  agendaItems             AgendaItem[]
+
+  @@unique([buildingId, number])
 }
 
-// ─── Контакт собственника ────────────────────────────────────────────────────
-model contact {
-  id            String  @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  ownerId       String  @db.UniqueIdentifier
-  type          String  @db.NVarChar(50)
-  value         String  @db.NVarChar(500)
-  forNotify     Boolean @default(false)
+model AgendaItem {
+  id                    String   @id @default(uuid())
+  meetingId             String
+  questionId            String?
+  orderNumber           Int
+  customProtocolText    String?
+  customBulletinText    String?
 
-  owner owner @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  meeting               Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  question              QuestionLibrary?  @relation(fields: [questionId], references: [id])
+  answers               QuestionAnswer[]
+
+  @@unique([meetingId, orderNumber])
 }
 
-// ─── Представитель по доверенности ──────────────────────────────────────────
-model representative {
-  id              String    @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  ownerId         String    @db.UniqueIdentifier
-  fullName        String    @db.NVarChar(500)
-  proxyNumber     String?   @db.NVarChar(100)
-  issuedAt        DateTime?
-  expiresAt       DateTime?
-  scanPath        String?   @db.NVarChar(1000)
+model QuestionAnswer {
+  ownerId         String
+  agendaItemId    String
+  vote            String
+  weight          Float?
 
-  owner   owner    @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  ballots ballot[]
+  owner           Owner       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  agendaItem      AgendaItem  @relation(fields: [agendaItemId], references: [id])
+
+  @@id([ownerId, agendaItemId])
 }
 
-// ─── Версия реестра ───────────────────────────────────────────────────────────
-model registryVersion {
-  id            String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  buildingId    String   @db.UniqueIdentifier
-  versionNumber Int
-  formedAt      DateTime @default(now())
-  source        String   @db.NVarChar(100)
-  comment       String?  @db.NVarChar(2000)
+model AuditLog {
+  id              String    @id @default(uuid())
+  employeeId      String?
+  actionType      String
+  objectId        String?
+  oldValue        String?
+  newValue        String?
+  createdAt       DateTime  @default(now())
 
-  building building  @relation(fields: [buildingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  meetings meeting[]
-
-  @@unique([buildingId, versionNumber])
-}
-
-// ─── Импорт реестра ───────────────────────────────────────────────────────────
-model registryImport {
-  id                  String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  buildingId          String   @db.UniqueIdentifier
-  filePath            String   @db.NVarChar(1000)
-  status              String   @default("pending") @db.NVarChar(50)
-  importedByEmployeeId String? @db.UniqueIdentifier
-  createdAt           DateTime @default(now())
-
-  employee employee? @relation(fields: [importedByEmployeeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-// ─── Собрание (ОСС) ───────────────────────────────────────────────────────────
-model meeting {
-  id                   String    @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  companyId            String    @db.UniqueIdentifier
-  buildingId           String    @db.UniqueIdentifier
-  registryVersionId    String?   @db.UniqueIdentifier
-  initiatorEmployeeId  String?   @db.UniqueIdentifier
-  number               String    @db.NVarChar(50)
-  form                 String    @db.NVarChar(50)
-  status               String    @default("draft") @db.NVarChar(50)
-  dateStart            DateTime
-  dateEnd              DateTime
-  inPersonAddress      String?   @db.NVarChar(1000)
-  ballotAcceptAddress  String?   @db.NVarChar(1000)
-  noticeAddress        String?   @db.NVarChar(1000)
-  resultDate           DateTime?
-  reason               String?   @db.NVarChar(2000)
-  createdAt            DateTime  @default(now())
-  activatedAt          DateTime?
-  completedAt          DateTime?
-  archivedAt           DateTime?
-  quorumPercent        Float?
-  requiresGis          Boolean   @default(false)
-
-  company          company          @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  building         building         @relation(fields: [buildingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  registryVersion  registryVersion? @relation(fields: [registryVersionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  initiator        employee?        @relation("MeetingInitiator", fields: [initiatorEmployeeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  agendaItems        agendaItem[]
-  ballots            ballot[]
-  votingLinks        votingLink[]
-  votingSessions     votingSession[]
-  quorumResults      quorumResult[]
-  generatedDocuments generatedDocument[]
-}
-
-// ─── Библиотека вопросов ─────────────────────────────────────────────────────
-model questionLibrary {
-  id               String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  companyId        String   @db.UniqueIdentifier
-  shortTitle       String   @db.NVarChar(500)
-  protocolText     String   @db.NVarChar(Max)
-  bulletinText     String   @db.NVarChar(Max)
-  quorumType       String   @db.NVarChar(50)
-  category         String?  @db.NVarChar(200)
-  tags             String?  @db.NVarChar(500)
-  createdByEmployeeId String? @db.UniqueIdentifier
-  createdAt        DateTime @default(now())
-
-  company      company   @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdBy    employee? @relation(fields: [createdByEmployeeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  agendaItems  agendaItem[]
-}
-
-// ─── Пункт повестки ───────────────────────────────────────────────────────────
-model agendaItem {
-  id                String  @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId         String  @db.UniqueIdentifier
-  questionId        String? @db.UniqueIdentifier
-  orderNumber       Int
-  customProtocolText String? @db.NVarChar(Max)
-  customBulletinText String? @db.NVarChar(Max)
-  decisionType      String  @db.NVarChar(50)
-  acceptPercent     Float   @default(50)
-
-  meeting         meeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  question        questionLibrary? @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  questionAnswers questionAnswer[]
-}
-
-// ─── Шаблон документа ────────────────────────────────────────────────────────
-model documentTemplate {
-  id           String  @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  companyId    String  @db.UniqueIdentifier
-  documentType String  @db.NVarChar(100)
-  name         String  @db.NVarChar(500)
-  filePath     String  @db.NVarChar(1000)
-  version      Int     @default(1)
-  active       Boolean @default(true)
-
-  company company @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-// ─── Бюллетень ────────────────────────────────────────────────────────────────
-model ballot {
-  id                     String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId              String   @db.UniqueIdentifier
-  ownershipId            String   @db.UniqueIdentifier
-  representativeId       String?  @db.UniqueIdentifier
-  createdByEmployeeId    String?  @db.UniqueIdentifier
-  replacedByBallotId     String?  @db.UniqueIdentifier
-  received               Boolean  @default(false)
-  deliveryMethod         String?  @db.NVarChar(50)
-  status                 String   @default("pending") @db.NVarChar(50)
-  invalidReason          String?  @db.NVarChar(500)
-  invalidNote            String?  @db.NVarChar(1000)
-  scanPath               String?  @db.NVarChar(1000)
-  manualEntry            Boolean  @default(false)
-  createdAt              DateTime @default(now())
-
-  meeting        meeting         @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ownership      ownership       @relation(fields: [ownershipId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  representative representative? @relation(fields: [representativeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdBy      employee?       @relation("BallotCreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  answers        questionAnswer[]
-}
-
-// ─── Ссылка для голосования ──────────────────────────────────────────────────
-model votingLink {
-  id          String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId   String   @db.UniqueIdentifier
-  ownershipId String   @db.UniqueIdentifier
-  token       String   @unique @db.NVarChar(500)
-  validUntil  DateTime
-  used        Boolean  @default(false)
-
-  meeting   meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  ownership ownership @relation(fields: [ownershipId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-// ─── Сессия голосования ──────────────────────────────────────────────────────
-model votingSession {
-  id          String    @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId   String    @db.UniqueIdentifier
-  ownershipId String    @db.UniqueIdentifier
-  ip          String?   @db.NVarChar(45)
-  userAgent   String?   @db.NVarChar(500)
-  startedAt   DateTime  @default(now())
-  completedAt DateTime?
-
-  meeting   meeting   @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ownership ownership @relation(fields: [ownershipId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-// ─── Ответ по вопросу ─────────────────────────────────────────────────────────
-model questionAnswer {
-  id           String @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  ballotId     String @db.UniqueIdentifier
-  agendaItemId String @db.UniqueIdentifier
-  vote         String @db.NVarChar(20)
-  source       String @default("manual") @db.NVarChar(50)
-
-  ballot     ballot     @relation(fields: [ballotId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  agendaItem agendaItem @relation(fields: [agendaItemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([ballotId, agendaItemId])
-}
-
-// ─── Результат кворума ────────────────────────────────────────────────────────
-model quorumResult {
-  id                  String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId           String   @db.UniqueIdentifier
-  totalArea           Float
-  participatingArea   Float
-  participationPercent Float
-  quorumReached       Boolean
-  calculatedAt        DateTime @default(now())
-
-  meeting meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-// ─── Сгенерированный документ ────────────────────────────────────────────────
-model generatedDocument {
-  id                  String   @id @default(dbgenerated("newid()")) @db.UniqueIdentifier
-  meetingId           String   @db.UniqueIdentifier
-  documentType        String   @db.NVarChar(100)
-  version             Int      @default(1)
-  generatedAt         DateTime @default(now())
-  createdByEmployeeId String?  @db.UniqueIdentifier
-  filePath            String?  @db.NVarChar(1000)
-  isFinal             Boolean  @default(false)
-
-  meeting meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  employee        Employee? @relation(fields: [employeeId], references: [id])
 }

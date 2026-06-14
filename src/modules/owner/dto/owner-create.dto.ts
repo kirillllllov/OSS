@@ -5,4 +5,5 @@ export class OwnerCreateDto {
   @ApiProperty() @IsString() fullName: string;
   @ApiPropertyOptional() @IsOptional() @IsString() inn?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() snils?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() contactInfo?: string;
 }

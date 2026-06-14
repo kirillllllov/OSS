@@ -6,10 +6,10 @@ import { CreateQuestionAnswerDto } from './dto/create-question-answer.dto';
 export class QuestionAnswerRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(ballotId?: string, agendaItemId?: string) {
+  findAll(ownerId?: string, agendaItemId?: string) {
     return this.prisma.questionAnswer.findMany({
       where: {
-        ...(ballotId ? { ballotId } : {}),
+        ...(ownerId ? { ownerId } : {}),
         ...(agendaItemId ? { agendaItemId } : {}),
       },
       include: { agendaItem: true },
@@ -20,21 +20,21 @@ export class QuestionAnswerRepository {
     return this.prisma.questionAnswer.findUnique({ where: { id } });
   }
 
-  findByBallotAndAgendaItem(ballotId: string, agendaItemId: string) {
-    return this.prisma.questionAnswer.findUnique({ where: { ballotId_agendaItemId: { ballotId, agendaItemId } } });
+  findByBallotAndAgendaItem(ownerId: string, agendaItemId: string) {
+    return this.prisma.questionAnswer.findUnique({ where: { ballotId_agendaItemId: { ownerId, agendaItemId } } });
   }
 
   create(dto: CreateQuestionAnswerDto) {
     return this.prisma.questionAnswer.create({
-      data: { ballotId: dto.ballotId, agendaItemId: dto.agendaItemId,
+      data: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId,
         vote: dto.vote, source: dto.source ?? 'manual' },
     });
   }
 
   upsert(dto: CreateQuestionAnswerDto) {
     return this.prisma.questionAnswer.upsert({
-      where: { ballotId_agendaItemId: { ballotId: dto.ballotId, agendaItemId: dto.agendaItemId } },
-      create: { ballotId: dto.ballotId, agendaItemId: dto.agendaItemId, vote: dto.vote, source: dto.source ?? 'manual' },
+      where: { ballotId_agendaItemId: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId } },
+      create: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId, vote: dto.vote, source: dto.source ?? 'manual' },
       update: { vote: dto.vote, source: dto.source ?? 'manual' },
     });
   }
