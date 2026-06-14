@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
 }
 
 model Building {
@@ -99,8 +99,7 @@ model QuestionLibrary {
   createdByEmployeeId String?
   createdAt           DateTime  @default(now())
 
-  // Разрываем цикл: при удалении сотрудника не удаляем вопросы, а просто обнуляем createdByEmployeeId
-  createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: SetNull)
   agendaItems         AgendaItem[]
 }
 
@@ -108,7 +107,7 @@ model Meeting {
   id                      String    @id @default(uuid())
   buildingId              String
   number                  String
-  status                  String    @default("draft")   // исправлено: было "С‡РµСЂРЅРѕРІРёРє"
+  status                  String    @default("draft")
   form                    String
   startDate               String
   endDate                 String?
@@ -125,8 +124,7 @@ model Meeting {
   archivedAt              String?
 
   building                Building   @relation(fields: [buildingId], references: [id], onDelete: Cascade)
-  // Разрываем цикл: при удалении инициатора не удаляем собрание, а обнуляем
-  initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id], onDelete: SetNull)
   agendaItems             AgendaItem[]
 
   @@unique([buildingId, number])
@@ -140,8 +138,8 @@ model AgendaItem {
   customProtocolText    String?
   customBulletinText    String?
 
-  meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  question  QuestionLibrary? @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  meeting   Meeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  question  QuestionLibrary? @relation(fields: [questionId], references: [id], onDelete: NoAction)
   answers   QuestionAnswer[]
 
   @@unique([meetingId, orderNumber])
