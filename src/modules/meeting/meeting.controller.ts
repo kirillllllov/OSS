@@ -22,14 +22,12 @@ export class MeetingController {
   @ApiOperation({ summary: 'Список собраний' })
   @ApiResponse({ status: 200, type: [MeetingResponseDto] })
   @ApiQuery({ name: 'buildingId', required: false })
-  @ApiQuery({ name: 'companyId', required: false })
   @ApiQuery({ name: 'status', required: false, enum: ['draft', 'active', 'voting', 'counting', 'completed', 'archived'] })
   findAll(
     @Query('buildingId') buildingId?: string,
-    @Query('companyId') companyId?: string,
     @Query('status') status?: string,
   ): Promise<MeetingResponseDto[]> {
-    return this.svc.findAll(buildingId, companyId, status);
+    return this.svc.findAll(buildingId, status);
   }
 
   @Get(':id')

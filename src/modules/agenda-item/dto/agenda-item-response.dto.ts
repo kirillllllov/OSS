@@ -7,6 +7,4 @@ export class AgendaItemResponseDto {
   @ApiProperty() orderNumber: number;
   @ApiPropertyOptional() customProtocolText?: string;
   @ApiPropertyOptional() customBulletinText?: string;
-  @ApiProperty() decisionType: string;
-  @ApiProperty() acceptPercent: number;
 }

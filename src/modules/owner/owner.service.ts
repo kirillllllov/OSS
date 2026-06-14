@@ -36,6 +36,6 @@ export class OwnerService {
   }
 
   private toDto(o: any): OwnerResponseDto {
-    return { id: o.id, fullName: o.fullName, inn: o.inn, snils: o.snils, updatedAt: o.updatedAt };
+    return { id: o.id, fullName: o.fullName, inn: o.inn, snils: o.snils };
   }
 }

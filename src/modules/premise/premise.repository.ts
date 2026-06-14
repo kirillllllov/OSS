@@ -15,12 +15,12 @@ export class PremiseRepository {
   async findById(id: string) {
     return this.prisma.premise.findUnique({
       where: { id },
-      include: { building: true, ownerships: { include: { owner: true } } },
+      include: { building: true, ownershipRights: { include: { owner: true } } },
     });
   }
 
   async findByCadastralNumber(cadastralNumber: string) {
-    return this.prisma.premise.findUnique({ where: { cadastralNumber } });
+    return this.prisma.premise.findFirst({ where: { cadastralNumber } });
   }
 
   async create(data: any) {

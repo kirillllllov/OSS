@@ -7,11 +7,10 @@ import { UpdateMeetingDto } from './dto/update-meeting.dto';
 export class MeetingRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(buildingId?: string, companyId?: string, status?: string) {
+  findAll(buildingId?: string, status?: string) {
     return this.prisma.meeting.findMany({
       where: {
         ...(buildingId ? { buildingId } : {}),
-        ...(companyId ? { companyId } : {}),
         ...(status ? { status } : {}),
       },
       orderBy: { createdAt: 'desc' },
@@ -32,15 +31,19 @@ export class MeetingRepository {
   create(dto: CreateMeetingDto) {
     return this.prisma.meeting.create({
       data: {
-        companyId: dto.companyId, buildingId: dto.buildingId,
-        registryVersionId: dto.registryVersionId,
+        buildingId: dto.buildingId,
         initiatorEmployeeId: dto.initiatorEmployeeId,
-        number: dto.number, form: dto.form, status: 'draft',
-        dateStart: new Date(dto.dateStart), dateEnd: new Date(dto.dateEnd),
-        inPersonAddress: dto.inPersonAddress, ballotAcceptAddress: dto.ballotAcceptAddress,
+        number: dto.number,
+        form: dto.form,
+        status: 'draft',
+        startDate: dto.startDate,
+        endDate: dto.endDate,
+        inPersonStartTime: dto.inPersonStartTime,
+        inPersonAddress: dto.inPersonAddress,
+        ballotAcceptanceAddress: dto.ballotAcceptanceAddress,
         noticeAddress: dto.noticeAddress,
-        resultDate: dto.resultDate ? new Date(dto.resultDate) : undefined,
-        reason: dto.reason, requiresGis: dto.requiresGis ?? false,
+        resultsDate: dto.resultsDate,
+        extensionReason: dto.extensionReason,
       },
     });
   }
@@ -55,7 +58,7 @@ export class MeetingRepository {
 
   setStatus(id: string, status: string, timestampField?: string) {
     const data: any = { status };
-    if (timestampField) data[timestampField] = new Date();
+    if (timestampField) data[timestampField] = new Date().toISOString();
     return this.prisma.meeting.update({ where: { id }, data });
   }
 }

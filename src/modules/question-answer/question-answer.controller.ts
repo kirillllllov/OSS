@@ -11,7 +11,7 @@ export class QuestionAnswerController {
   constructor(private readonly svc: QuestionAnswerService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Записать/обновить ответ по вопросу бюллетеня' })
+  @ApiOperation({ summary: 'Записать/обновить ответ по вопросу' })
   @ApiResponse({ status: 201, type: QuestionAnswerResponseDto })
   upsert(@Body() dto: CreateQuestionAnswerDto): Promise<QuestionAnswerResponseDto> {
     return this.svc.upsert(dto);
@@ -22,21 +22,30 @@ export class QuestionAnswerController {
   @ApiResponse({ status: 200, type: [QuestionAnswerResponseDto] })
   @ApiQuery({ name: 'ownerId', required: false })
   @ApiQuery({ name: 'agendaItemId', required: false })
-  findAll(@Query('ownerId') ownerId?: string, @Query('agendaItemId') agendaItemId?: string): Promise<QuestionAnswerResponseDto[]> {
+  findAll(
+    @Query('ownerId') ownerId?: string,
+    @Query('agendaItemId') agendaItemId?: string,
+  ): Promise<QuestionAnswerResponseDto[]> {
     return this.svc.findAll(ownerId, agendaItemId);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Получить ответ по ID' })
+  @Get(':ownerId/:agendaItemId')
+  @ApiOperation({ summary: 'Получить ответ по ownerId и agendaItemId' })
   @ApiResponse({ status: 200, type: QuestionAnswerResponseDto })
-  findOne(@Param('id') id: string): Promise<QuestionAnswerResponseDto> {
-    return this.svc.findOne(id);
+  findOne(
+    @Param('ownerId') ownerId: string,
+    @Param('agendaItemId') agendaItemId: string,
+  ): Promise<QuestionAnswerResponseDto> {
+    return this.svc.findOne(ownerId, agendaItemId);
   }
 
-  @Delete(':id')
+  @Delete(':ownerId/:agendaItemId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Удалить ответ' })
-  async remove(@Param('id') id: string): Promise<void> {
-    await this.svc.delete(id);
+  async remove(
+    @Param('ownerId') ownerId: string,
+    @Param('agendaItemId') agendaItemId: string,
+  ): Promise<void> {
+    await this.svc.delete(ownerId, agendaItemId);
   }
 }

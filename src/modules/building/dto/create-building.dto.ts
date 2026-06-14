@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsNumber, Min } from 'class-validator';
 
 export class CreateBuildingDto {
-  @ApiProperty() @IsString() companyId: string;
   @ApiProperty() @IsString() address: string;
   @ApiProperty() @IsString() cadastralNumber: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() yearBuilt?: number;

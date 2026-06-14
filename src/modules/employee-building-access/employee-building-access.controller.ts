@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { EmployeeBuildingAccessService } from './employee-building-access.service';
 import { CreateAccessDto } from './dto/create-access.dto';
 
@@ -15,11 +15,14 @@ export class EmployeeBuildingAccessController {
     return this.svc.grant(dto);
   }
 
-  @Delete(':id')
+  @Delete(':employeeId/:buildingId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Отозвать доступ' })
-  async revoke(@Param('id') id: string): Promise<void> {
-    await this.svc.revoke(id);
+  async revoke(
+    @Param('employeeId') employeeId: string,
+    @Param('buildingId') buildingId: string,
+  ): Promise<void> {
+    await this.svc.revoke(employeeId, buildingId);
   }
 
   @Get('by-employee/:employeeId')

@@ -36,9 +36,13 @@ export class OwnershipService {
 
   private toDto(o: any): OwnershipResponseDto {
     return {
-      id: o.id, premiseId: o.premiseId, ownerId: o.ownerId,
-      share: o.share, shareArea: o.shareArea,
-      titleDocument: o.titleDocument, regDate: o.regDate,
+      id: o.id,
+      premiseId: o.premiseId,
+      ownerId: o.ownerId,
+      share: o.share,
+      shareArea: o.shareArea,
+      titleDocument: o.titleDocument,
+      registrationDate: o.registrationDate,
       basisDocument: o.basisDocument,
     };
   }

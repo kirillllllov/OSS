@@ -7,7 +7,7 @@ export class OwnershipRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findAll(premiseId?: string, ownerId?: string) {
-    return this.prisma.ownership.findMany({
+    return this.prisma.ownershipRight.findMany({
       where: {
         ...(premiseId ? { premiseId } : {}),
         ...(ownerId ? { ownerId } : {}),
@@ -17,21 +17,21 @@ export class OwnershipRepository {
   }
 
   findById(id: string) {
-    return this.prisma.ownership.findUnique({
+    return this.prisma.ownershipRight.findUnique({
       where: { id },
       include: { premise: true, owner: true },
     });
   }
 
   create(data: OwnershipCreateDto) {
-    return this.prisma.ownership.create({
+    return this.prisma.ownershipRight.create({
       data: {
         premiseId: data.premiseId,
         ownerId: data.ownerId,
         share: data.share,
         shareArea: data.shareArea,
         titleDocument: data.titleDocument,
-        regDate: data.regDate,
+        registrationDate: data.registrationDate,
         basisDocument: data.basisDocument,
       },
       include: { premise: true, owner: true },
@@ -39,14 +39,20 @@ export class OwnershipRepository {
   }
 
   update(id: string, data: Partial<OwnershipCreateDto>) {
-    return this.prisma.ownership.update({
+    return this.prisma.ownershipRight.update({
       where: { id },
-      data,
+      data: {
+        share: data.share,
+        shareArea: data.shareArea,
+        titleDocument: data.titleDocument,
+        registrationDate: data.registrationDate,
+        basisDocument: data.basisDocument,
+      },
       include: { premise: true, owner: true },
     });
   }
 
   delete(id: string) {
-    return this.prisma.ownership.delete({ where: { id } });
+    return this.prisma.ownershipRight.delete({ where: { id } });
   }
 }

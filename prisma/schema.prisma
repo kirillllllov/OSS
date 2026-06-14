@@ -1,11 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "sqlserver"
 }
 
 model Building {
@@ -36,6 +34,7 @@ model Premise {
   building          Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
   ownershipRights   OwnershipRight[]
 }
+
 model Owner {
   id                String   @id @default(uuid())
   fullName          String
@@ -100,7 +99,8 @@ model QuestionLibrary {
   createdByEmployeeId String?
   createdAt           DateTime  @default(now())
 
-  createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id])
+  // Разрываем цикл: при удалении сотрудника не удаляем вопросы, а просто обнуляем createdByEmployeeId
+  createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   agendaItems         AgendaItem[]
 }
 
@@ -108,7 +108,7 @@ model Meeting {
   id                      String    @id @default(uuid())
   buildingId              String
   number                  String
-  status                  String    @default("С‡РµСЂРЅРѕРІРёРє")
+  status                  String    @default("draft")   // исправлено: было "С‡РµСЂРЅРѕРІРёРє"
   form                    String
   startDate               String
   endDate                 String?
@@ -124,8 +124,9 @@ model Meeting {
   completedAt             String?
   archivedAt              String?
 
-  building                Building   @relation(fields: [buildingId], references: [id])
-  initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id])
+  building                Building   @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  // Разрываем цикл: при удалении инициатора не удаляем собрание, а обнуляем
+  initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   agendaItems             AgendaItem[]
 
   @@unique([buildingId, number])
@@ -139,9 +140,9 @@ model AgendaItem {
   customProtocolText    String?
   customBulletinText    String?
 
-  meeting               Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
-  question              QuestionLibrary?  @relation(fields: [questionId], references: [id])
-  answers               QuestionAnswer[]
+  meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  question  QuestionLibrary? @relation(fields: [questionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  answers   QuestionAnswer[]
 
   @@unique([meetingId, orderNumber])
 }
@@ -153,7 +154,7 @@ model QuestionAnswer {
   weight          Float?
 
   owner           Owner       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  agendaItem      AgendaItem  @relation(fields: [agendaItemId], references: [id])
+  agendaItem      AgendaItem  @relation(fields: [agendaItemId], references: [id], onDelete: Cascade)
 
   @@id([ownerId, agendaItemId])
 }
@@ -167,5 +168,5 @@ model AuditLog {
   newValue        String?
   createdAt       DateTime  @default(now())
 
-  employee        Employee? @relation(fields: [employeeId], references: [id])
+  employee        Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
 }

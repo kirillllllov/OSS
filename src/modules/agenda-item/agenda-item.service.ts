@@ -35,8 +35,13 @@ export class AgendaItemService {
   }
 
   private toDto(i: any): AgendaItemResponseDto {
-    return { id: i.id, meetingId: i.meetingId, questionId: i.questionId, orderNumber: i.orderNumber,
-      customProtocolText: i.customProtocolText, customBulletinText: i.customBulletinText,
-      decisionType: i.decisionType, acceptPercent: i.acceptPercent };
+    return {
+      id: i.id,
+      meetingId: i.meetingId,
+      questionId: i.questionId,
+      orderNumber: i.orderNumber,
+      customProtocolText: i.customProtocolText,
+      customBulletinText: i.customBulletinText,
+    };
   }
 }

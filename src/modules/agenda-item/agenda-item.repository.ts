@@ -17,19 +17,18 @@ export class AgendaItemRepository {
   findById(id: string) {
     return this.prisma.agendaItem.findUnique({
       where: { id },
-      include: { question: true, questionAnswers: true },
+      include: { question: true, answers: true },
     });
   }
 
   create(dto: CreateAgendaItemDto) {
     return this.prisma.agendaItem.create({
       data: {
-        meetingId: dto.meetingId, questionId: dto.questionId,
+        meetingId: dto.meetingId,
+        questionId: dto.questionId,
         orderNumber: dto.orderNumber,
         customProtocolText: dto.customProtocolText,
         customBulletinText: dto.customBulletinText,
-        decisionType: dto.decisionType,
-        acceptPercent: dto.acceptPercent ?? 50,
       },
     });
   }

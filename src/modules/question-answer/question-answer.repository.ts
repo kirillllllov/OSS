@@ -16,40 +16,29 @@ export class QuestionAnswerRepository {
     });
   }
 
-  findById(id: string) {
-    return this.prisma.questionAnswer.findUnique({ where: { id } });
-  }
-
-  findByBallotAndAgendaItem(ownerId: string, agendaItemId: string) {
-    return this.prisma.questionAnswer.findUnique({ where: { ballotId_agendaItemId: { ownerId, agendaItemId } } });
+  findByCompositeKey(ownerId: string, agendaItemId: string) {
+    return this.prisma.questionAnswer.findUnique({
+      where: { ownerId_agendaItemId: { ownerId, agendaItemId } },
+    });
   }
 
   create(dto: CreateQuestionAnswerDto) {
     return this.prisma.questionAnswer.create({
-      data: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId,
-        vote: dto.vote, source: dto.source ?? 'manual' },
+      data: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId, vote: dto.vote },
     });
   }
 
   upsert(dto: CreateQuestionAnswerDto) {
     return this.prisma.questionAnswer.upsert({
-      where: { ballotId_agendaItemId: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId } },
-      create: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId, vote: dto.vote, source: dto.source ?? 'manual' },
-      update: { vote: dto.vote, source: dto.source ?? 'manual' },
+      where: { ownerId_agendaItemId: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId } },
+      create: { ownerId: dto.ownerId, agendaItemId: dto.agendaItemId, vote: dto.vote },
+      update: { vote: dto.vote },
     });
   }
 
-  delete(id: string) {
-    return this.prisma.questionAnswer.delete({ where: { id } });
-  }
-
-  getAnswersByMeeting(meetingId: string) {
-    return this.prisma.questionAnswer.findMany({
-      where: { ballot: { meetingId, status: 'valid' } },
-      include: {
-        ballot: { include: { ownership: { select: { shareArea: true } } } },
-        agendaItem: true,
-      },
+  delete(ownerId: string, agendaItemId: string) {
+    return this.prisma.questionAnswer.delete({
+      where: { ownerId_agendaItemId: { ownerId, agendaItemId } },
     });
   }
 }

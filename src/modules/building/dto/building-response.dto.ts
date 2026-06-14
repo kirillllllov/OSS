@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class BuildingResponseDto {
   @ApiProperty() id: string;
-  @ApiProperty() companyId: string;
   @ApiProperty() address: string;
   @ApiProperty() cadastralNumber: string;
   @ApiPropertyOptional() yearBuilt?: number;

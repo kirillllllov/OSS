@@ -12,15 +12,15 @@ export class OwnerRepository {
   findById(id: string) {
     return this.prisma.owner.findUnique({
       where: { id },
-      include: { ownerships: { include: { premise: true } }, contacts: true, representatives: true },
+      include: { ownershipRights: { include: { premise: true } } },
     });
   }
 
-  create(data: { fullName: string; inn?: string; snils?: string }) {
+  create(data: { fullName: string; inn?: string; snils?: string; contacts?: string }) {
     return this.prisma.owner.create({ data });
   }
 
-  update(id: string, data: Partial<{ fullName: string; inn: string; snils: string }>) {
+  update(id: string, data: Partial<{ fullName: string; inn: string; snils: string; contacts: string }>) {
     return this.prisma.owner.update({ where: { id }, data });
   }
 

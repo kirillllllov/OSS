@@ -26,8 +26,8 @@ export class MeetingService {
     return this.toDto(m);
   }
 
-  async findAll(buildingId?: string, companyId?: string, status?: string): Promise<MeetingResponseDto[]> {
-    const list = await this.repo.findAll(buildingId, companyId, status);
+  async findAll(buildingId?: string, status?: string): Promise<MeetingResponseDto[]> {
+    const list = await this.repo.findAll(buildingId, status);
     return list.map(m => this.toDto(m));
   }
 
@@ -40,11 +40,7 @@ export class MeetingService {
   async update(id: string, dto: UpdateMeetingDto): Promise<MeetingResponseDto> {
     const m = await this.findOne(id);
     if (m.status !== 'draft') throw new BadRequestException('Редактирование доступно только для черновиков');
-    const data: any = { ...dto };
-    if (dto.dateStart) data.dateStart = new Date(dto.dateStart);
-    if (dto.dateEnd) data.dateEnd = new Date(dto.dateEnd);
-    if (dto.resultDate) data.resultDate = new Date(dto.resultDate);
-    const updated = await this.repo.update(id, data);
+    const updated = await this.repo.update(id, dto);
     return this.toDto(updated);
   }
 
@@ -66,15 +62,24 @@ export class MeetingService {
 
   private toDto(m: any): MeetingResponseDto {
     return {
-      id: m.id, companyId: m.companyId, buildingId: m.buildingId,
-      registryVersionId: m.registryVersionId, initiatorEmployeeId: m.initiatorEmployeeId,
-      number: m.number, form: m.form, status: m.status,
-      dateStart: m.dateStart, dateEnd: m.dateEnd,
-      inPersonAddress: m.inPersonAddress, ballotAcceptAddress: m.ballotAcceptAddress,
-      noticeAddress: m.noticeAddress, resultDate: m.resultDate, reason: m.reason,
-      requiresGis: m.requiresGis, createdAt: m.createdAt,
-      activatedAt: m.activatedAt, completedAt: m.completedAt, archivedAt: m.archivedAt,
-      quorumPercent: m.quorumPercent,
+      id: m.id,
+      buildingId: m.buildingId,
+      initiatorEmployeeId: m.initiatorEmployeeId,
+      number: m.number,
+      form: m.form,
+      status: m.status,
+      startDate: m.startDate,
+      endDate: m.endDate,
+      inPersonStartTime: m.inPersonStartTime,
+      inPersonAddress: m.inPersonAddress,
+      ballotAcceptanceAddress: m.ballotAcceptanceAddress,
+      noticeAddress: m.noticeAddress,
+      resultsDate: m.resultsDate,
+      extensionReason: m.extensionReason,
+      createdAt: m.createdAt,
+      activatedAt: m.activatedAt,
+      completedAt: m.completedAt,
+      archivedAt: m.archivedAt,
     };
   }
 }

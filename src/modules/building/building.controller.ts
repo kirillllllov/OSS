@@ -4,7 +4,7 @@ import { BuildingService } from './building.service';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
 import { BuildingResponseDto } from './dto/building-response.dto';
-import { SessionGuard } from '../auth/guards/session.guard';
+import { SessionGuard } from '../auth/guards/session.guards';
 import { BuildingAccessGuard } from './guards/building-access.guard';
 
 @ApiTags('buildings')

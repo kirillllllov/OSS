@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -9,9 +13,17 @@ export class EmployeeService {
 
   async create(dto: CreateEmployeeDto, currentUserRole: string) {
     if (currentUserRole !== 'COMPANY_ADMIN') {
-      throw new ForbiddenException('Только главный админ может создавать сотрудников');
+      throw new ForbiddenException(
+        'Только главный админ может создавать сотрудников',
+      );
     }
-    const { email, password, fullName, role = 'EMPLOYEE', buildingIds = [] } = dto;
+    const {
+      email,
+      password,
+      fullName,
+      role = 'EMPLOYEE',
+      buildingIds = [],
+    } = dto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const employee = await this.prisma.employee.create({
       data: {
@@ -29,11 +41,23 @@ export class EmployeeService {
   }
 
   async assignBuildingsToEmployee(employeeId: string, buildingIds: string[]) {
-    const data = buildingIds.map(buildingId => ({ employeeId, buildingId }));
-    await this.prisma.employeeBuildingAccess.createMany({
-      data,
-      skipDuplicates: true,
-    });
+    // Используем транзакцию с upsert для каждого buildingId
+    const operations = buildingIds.map((buildingId) =>
+      this.prisma.employeeBuildingAccess.upsert({
+        where: {
+          employeeId_buildingId: {
+            employeeId,
+            buildingId,
+          },
+        },
+        update: {}, // ничего не обновляем, если запись существует
+        create: {
+          employeeId,
+          buildingId,
+        },
+      }),
+    );
+    await this.prisma.$transaction(operations);
   }
 
   async getEmployeeBuildings(employeeId: string) {
@@ -41,12 +65,19 @@ export class EmployeeService {
       where: { employeeId },
       include: { building: true },
     });
-    return accesses.map(acc => acc.building);
+    return accesses.map((acc) => acc.building);
   }
 
   async findAll() {
     return this.prisma.employee.findMany({
-      select: { id: true, email: true, fullName: true, role: true, isActive: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+      },
     });
   }
 }

@@ -14,10 +14,14 @@ export class EmployeeBuildingAccessService {
     return this.prisma.employeeBuildingAccess.create({ data: dto });
   }
 
-  async revoke(id: string): Promise<void> {
-    const rec = await this.prisma.employeeBuildingAccess.findUnique({ where: { id } });
+  async revoke(employeeId: string, buildingId: string): Promise<void> {
+    const rec = await this.prisma.employeeBuildingAccess.findFirst({
+      where: { employeeId, buildingId },
+    });
     if (!rec) throw new NotFoundException('Запись доступа не найдена');
-    await this.prisma.employeeBuildingAccess.delete({ where: { id } });
+    await this.prisma.employeeBuildingAccess.delete({
+      where: { employeeId_buildingId: { employeeId, buildingId } },
+    });
   }
 
   async findByEmployee(employeeId: string) {

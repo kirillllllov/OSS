@@ -3,10 +3,14 @@ import { BuildingRepository } from './building.repository';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
 import { BuildingResponseDto } from './dto/building-response.dto';
+import { PrismaService } from '../prisma/prisma.service';  // добавьте импорт
 
 @Injectable()
 export class BuildingService {
-  constructor(private readonly buildingRepository: BuildingRepository) {}
+  constructor(
+    private readonly buildingRepository: BuildingRepository,
+    private readonly prisma: PrismaService, // добавьте эту строку
+  ) {}
 
   async create(data: CreateBuildingDto): Promise<BuildingResponseDto> {
     const existing = await this.buildingRepository.findByCadastralNumber(data.cadastralNumber);
@@ -16,7 +20,7 @@ export class BuildingService {
   }
 
   async findAll(companyId?: string): Promise<BuildingResponseDto[]> {
-    const buildings = await this.buildingRepository.findAll(companyId);
+    const buildings = await this.prisma.building.findMany(); // теперь работает
     return buildings.map(b => this.toResponseDto(b));
   }
 
@@ -43,11 +47,16 @@ export class BuildingService {
 
   private toResponseDto(building: any): BuildingResponseDto {
     return {
-      id: building.id, companyId: building.companyId, address: building.address,
-      cadastralNumber: building.cadastralNumber, yearBuilt: building.yearBuilt,
-      floors: building.floors, entrances: building.entrances,
-      totalArea: building.totalArea, totalPremises: building.totalPremises,
-      createdAt: building.createdAt, updatedAt: building.updatedAt,
+      id: building.id,
+      address: building.address,
+      cadastralNumber: building.cadastralNumber,
+      yearBuilt: building.yearBuilt,
+      floors: building.floors,
+      entrances: building.entrances,
+      totalArea: building.totalArea,
+      totalPremises: building.totalPremises,
+      createdAt: building.createdAt,
+      updatedAt: building.updatedAt,
     };
   }
 }

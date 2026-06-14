@@ -1,7 +1,15 @@
-import { Controller, Post, Body, Request, UseGuards, Get, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Request,
+  UseGuards,
+  Get,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { SessionGuard } from './guards/session.guard';
+import { SessionGuard } from '../auth/guards/session.guards';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +17,10 @@ export class AuthController {
 
   @Post('login')
   async login(@Request() req, @Body() loginDto: LoginDto) {
-    const employee = await this.authService.validateEmployee(loginDto.email, loginDto.password);
+    const employee = await this.authService.validateEmployee(
+      loginDto.email,
+      loginDto.password,
+    );
     if (!employee) throw new UnauthorizedException('Неверный email или пароль');
     // Сохраняем в сессию
     req.session.employeeId = employee.id;
@@ -35,8 +46,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(SessionGuard)
-  async getMe(@Request() req) {
-    // req.user заполняется в SessionGuard (см. ниже)
+  async getMe(@Request() req: any) {
     return req.user;
   }
 }

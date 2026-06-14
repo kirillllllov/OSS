@@ -7,39 +7,33 @@ import { QuestionAnswerResponseDto } from './dto/question-answer-response.dto';
 export class QuestionAnswerService {
   constructor(private readonly repo: QuestionAnswerRepository) {}
 
-  async upsert(
-    dto: CreateQuestionAnswerDto,
-  ): Promise<QuestionAnswerResponseDto> {
+  async upsert(dto: CreateQuestionAnswerDto): Promise<QuestionAnswerResponseDto> {
     const answer = await this.repo.upsert(dto);
     return this.toDto(answer);
   }
 
-  async findAll(
-    ownerId?: string,
-    agendaItemId?: string,
-  ): Promise<QuestionAnswerResponseDto[]> {
+  async findAll(ownerId?: string, agendaItemId?: string): Promise<QuestionAnswerResponseDto[]> {
     const list = await this.repo.findAll(ownerId, agendaItemId);
-    return list.map((a) => this.toDto(a));
+    return list.map(a => this.toDto(a));
   }
 
-  async findOne(id: string): Promise<QuestionAnswerResponseDto> {
-    const a = await this.repo.findById(id);
+  async findOne(ownerId: string, agendaItemId: string): Promise<QuestionAnswerResponseDto> {
+    const a = await this.repo.findByCompositeKey(ownerId, agendaItemId);
     if (!a) throw new NotFoundException('Ответ не найден');
     return this.toDto(a);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.findOne(id);
-    await this.repo.delete(id);
+  async delete(ownerId: string, agendaItemId: string): Promise<void> {
+    await this.findOne(ownerId, agendaItemId);
+    await this.repo.delete(ownerId, agendaItemId);
   }
 
   private toDto(a: any): QuestionAnswerResponseDto {
     return {
-      id: a.id,
       ownerId: a.ownerId,
       agendaItemId: a.agendaItemId,
       vote: a.vote,
-      source: a.source,
+      weight: a.weight,
     };
   }
 }

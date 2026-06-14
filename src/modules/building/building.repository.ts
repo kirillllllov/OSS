@@ -7,9 +7,8 @@ import { UpdateBuildingDto } from './dto/update-building.dto';
 export class BuildingRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(companyId?: string) {
+  async findAll() {
     return this.prisma.building.findMany({
-      where: companyId ? { companyId } : {},
       orderBy: { address: 'asc' },
     });
   }
@@ -22,16 +21,19 @@ export class BuildingRepository {
   }
 
   async findByCadastralNumber(cadastralNumber: string) {
-    return this.prisma.building.findUnique({ where: { cadastralNumber } });
+    return this.prisma.building.findFirst({ where: { cadastralNumber } });
   }
 
   async create(data: CreateBuildingDto) {
     return this.prisma.building.create({
       data: {
-        companyId: data.companyId, address: data.address,
-        cadastralNumber: data.cadastralNumber, yearBuilt: data.yearBuilt,
-        floors: data.floors, entrances: data.entrances,
-        totalArea: data.totalArea, totalPremises: data.totalPremises,
+        address: data.address,
+        cadastralNumber: data.cadastralNumber,
+        yearBuilt: data.yearBuilt,
+        floors: data.floors,
+        entrances: data.entrances,
+        totalArea: data.totalArea,
+        totalPremises: data.totalPremises,
       },
     });
   }

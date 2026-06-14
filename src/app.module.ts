@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './modules/prisma/prisma.module';
-import { CompanyModule } from './modules/company/company.module';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { EmployeeBuildingAccessModule } from './modules/employee-building-access/employee-building-access.module';
 import { BuildingModule } from './modules/building/building.module';
@@ -18,7 +17,6 @@ import { AuthModule } from './modules/auth/auth.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
-    CompanyModule,
     EmployeeModule,
     EmployeeBuildingAccessModule,
     BuildingModule,

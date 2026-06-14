@@ -5,9 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 export class EmployeeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(companyId?: string) {
+  findAll() {
     return this.prisma.employee.findMany({
-      where: companyId ? { companyId } : {},
       orderBy: { fullName: 'asc' },
     });
   }
@@ -21,15 +20,21 @@ export class EmployeeRepository {
   }
 
   create(data: {
-    companyId: string; email: string; passwordHash: string;
-    fullName: string; role?: string; active?: boolean;
+    email: string;
+    passwordHash: string;
+    fullName: string;
+    role: string;
+    isActive?: number;
   }) {
     return this.prisma.employee.create({ data });
   }
 
   update(id: string, data: Partial<{
-    fullName: string; role: string; active: boolean; passwordHash: string;
-    lastLogin: Date; 
+    fullName: string;
+    role: string;
+    isActive: number;
+    passwordHash: string;
+    lastLogin: string;
   }>) {
     return this.prisma.employee.update({ where: { id }, data });
   }
