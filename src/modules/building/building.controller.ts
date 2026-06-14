@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { BuildingService } from './building.service';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
 import { BuildingResponseDto } from './dto/building-response.dto';
+import { SessionGuard } from '../auth/guards/session.guard';
+import { BuildingAccessGuard } from './guards/building-access.guard';
 
 @ApiTags('buildings')
 @ApiBearerAuth()
@@ -29,6 +31,7 @@ export class BuildingController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить здание по ID (с помещениями)' })
   @ApiResponse({ status: 200, type: BuildingResponseDto })
+  @UseGuards(SessionGuard, BuildingAccessGuard)
   findOne(@Param('id') id: string): Promise<BuildingResponseDto> {
     return this.buildingService.findOne(id);
   }
@@ -36,6 +39,7 @@ export class BuildingController {
   @Patch(':id')
   @ApiOperation({ summary: 'Обновить данные здания' })
   @ApiResponse({ status: 200, type: BuildingResponseDto })
+  @UseGuards(SessionGuard, BuildingAccessGuard)
   update(@Param('id') id: string, @Body() updateBuildingDto: UpdateBuildingDto): Promise<BuildingResponseDto> {
     return this.buildingService.update(id, updateBuildingDto);
   }
@@ -43,6 +47,7 @@ export class BuildingController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Удалить здание' })
+  @UseGuards(SessionGuard, BuildingAccessGuard)
   async remove(@Param('id') id: string): Promise<void> {
     await this.buildingService.delete(id);
   }

@@ -1,66 +1,52 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { EmployeeRepository } from './employee.repository';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { EmployeeResponseDto } from './dto/employee-response.dto';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private readonly repo: EmployeeRepository) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateEmployeeDto): Promise<EmployeeResponseDto> {
-    const existing = await this.repo.findByEmail(dto.email);
-    if (existing) throw new ConflictException('Сотрудник с таким email уже существует');
-    const passwordHash = await bcrypt.hash(dto.password, 10);
-    const emp = await this.repo.create({
-      companyId: dto.companyId, email: dto.email,
-      passwordHash, fullName: dto.fullName,
-      role: dto.role ?? 'manager', active: dto.active ?? true,
+  async create(dto: CreateEmployeeDto, currentUserRole: string) {
+    if (currentUserRole !== 'COMPANY_ADMIN') {
+      throw new ForbiddenException('Только главный админ может создавать сотрудников');
+    }
+    const { email, password, fullName, role = 'EMPLOYEE', buildingIds = [] } = dto;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const employee = await this.prisma.employee.create({
+      data: {
+        email,
+        passwordHash: hashedPassword,
+        fullName,
+        role,
+        isActive: 1,
+      },
     });
-    return this.toDto(emp);
+    if (buildingIds.length) {
+      await this.assignBuildingsToEmployee(employee.id, buildingIds);
+    }
+    return employee;
   }
 
-  async findAll(companyId?: string): Promise<EmployeeResponseDto[]> {
-    const list = await this.repo.findAll(companyId);
-    return list.map(e => this.toDto(e));
+  async assignBuildingsToEmployee(employeeId: string, buildingIds: string[]) {
+    const data = buildingIds.map(buildingId => ({ employeeId, buildingId }));
+    await this.prisma.employeeBuildingAccess.createMany({
+      data,
+      skipDuplicates: true,
+    });
   }
 
-  async findOne(id: string): Promise<EmployeeResponseDto> {
-    const emp = await this.repo.findById(id);
-    if (!emp) throw new NotFoundException('Сотрудник не найден');
-    return this.toDto(emp);
+  async getEmployeeBuildings(employeeId: string) {
+    const accesses = await this.prisma.employeeBuildingAccess.findMany({
+      where: { employeeId },
+      include: { building: true },
+    });
+    return accesses.map(acc => acc.building);
   }
 
-  async findByEmailRaw(email: string) {
-    return this.repo.findByEmail(email);
-  }
-
-  async update(id: string, dto: UpdateEmployeeDto): Promise<EmployeeResponseDto> {
-    await this.findOne(id);
-    const data: any = {};
-    if (dto.fullName) data.fullName = dto.fullName;
-    if (dto.role) data.role = dto.role;
-    if (dto.active !== undefined) data.active = dto.active;
-    if (dto.password) data.passwordHash = await bcrypt.hash(dto.password, 10);
-    const updated = await this.repo.update(id, data);
-    return this.toDto(updated);
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.findOne(id);
-    await this.repo.delete(id);
-  }
-
-  async recordLogin(id: string): Promise<void> {
-    await this.repo.update(id, { lastLogin: new Date()});
-  }
-
-  private toDto(e: any): EmployeeResponseDto {
-    return {
-      id: e.id, companyId: e.companyId, email: e.email,
-      fullName: e.fullName, role: e.role, active: e.active,
-      lastLogin: e.lastLogin, createdAt: e.createdAt,
-    };
+  async findAll() {
+    return this.prisma.employee.findMany({
+      select: { id: true, email: true, fullName: true, role: true, isActive: true, createdAt: true },
+    });
   }
 }

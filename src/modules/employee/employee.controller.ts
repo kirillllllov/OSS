@@ -1,49 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { Controller, Post, Body, UseGuards, Request, Get, Param, Delete, ForbiddenException } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { EmployeeResponseDto } from './dto/employee-response.dto';
+import { SessionGuard } from '../auth/guards/session.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('employees')
 @ApiBearerAuth()
 @Controller('employees')
+@UseGuards(SessionGuard, RolesGuard)
 export class EmployeeController {
-  constructor(private readonly svc: EmployeeService) {}
+  constructor(private employeeService: EmployeeService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Создать сотрудника' })
-  @ApiResponse({ status: 201, type: EmployeeResponseDto })
-  create(@Body() dto: CreateEmployeeDto): Promise<EmployeeResponseDto> {
-    return this.svc.create(dto);
+  @Roles('COMPANY_ADMIN')
+  async create(@Body() dto: CreateEmployeeDto, @Request() req) {
+    return this.employeeService.create(dto, req.user.role);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Список сотрудников' })
-  @ApiResponse({ status: 200, type: [EmployeeResponseDto] })
-  @ApiQuery({ name: 'companyId', required: false })
-  findAll(@Query('companyId') companyId?: string): Promise<EmployeeResponseDto[]> {
-    return this.svc.findAll(companyId);
+  @Roles('COMPANY_ADMIN')
+  async findAll() {
+    return this.employeeService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Получить сотрудника по ID' })
-  @ApiResponse({ status: 200, type: EmployeeResponseDto })
-  findOne(@Param('id') id: string): Promise<EmployeeResponseDto> {
-    return this.svc.findOne(id);
+  @Get('me/buildings')
+  async getMyBuildings(@Request() req) {
+    // Любой авторизованный сотрудник может посмотреть свои дома
+    return this.employeeService.getEmployeeBuildings(req.user.id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Обновить сотрудника' })
-  @ApiResponse({ status: 200, type: EmployeeResponseDto })
-  update(@Param('id') id: string, @Body() dto: UpdateEmployeeDto): Promise<EmployeeResponseDto> {
-    return this.svc.update(id, dto);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Удалить сотрудника' })
-  async remove(@Param('id') id: string): Promise<void> {
-    await this.svc.delete(id);
+  @Post(':employeeId/buildings/:buildingId')
+  @Roles('COMPANY_ADMIN')
+  async assignBuilding(@Param('employeeId') employeeId: string, @Param('buildingId') buildingId: string) {
+    await this.employeeService.assignBuildingsToEmployee(employeeId, [buildingId]);
+    return { message: 'Доступ добавлен' };
   }
 }
