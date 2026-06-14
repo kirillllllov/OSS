@@ -1,4 +1,3 @@
-// src/modules/prisma/prisma.service.ts
 import {
   Injectable,
   OnModuleInit,
