@@ -8,7 +8,7 @@ import * as session from 'express-session';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  //app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   app.enableCors();
 
@@ -39,7 +39,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
-  console.log(`🚀 Приложение запущено на http://localhost:${port}`);
-  console.log(`📚 Swagger доступен по адресу http://localhost:${port}/api/docs`);
+  console.log(`Приложение запущено на http://localhost:${port}`);
+  console.log(`Swagger доступен по адресу http://localhost:${port}/api/docs`);
 }
 bootstrap();
