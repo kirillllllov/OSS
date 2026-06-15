@@ -12,6 +12,7 @@ import { MeetingModule } from './modules/meeting/meeting.module';
 import { AgendaItemModule } from './modules/agenda-item/agenda-item.module';
 import { QuestionAnswerModule } from './modules/question-answer/question-answer.module';  
 import { AuthModule } from './modules/auth/auth.module';
+import { QuestionPoolModule } from './modules/question-pool/question-pool.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
     AgendaItemModule,
     QuestionAnswerModule,
     AuthModule,
+    QuestionPoolModule,
   ],
 })
 export class AppModule {}

@@ -72,9 +72,11 @@ model Employee {
   lastLogin             String?
   createdAt             DateTime  @default(now())
 
+
   buildingAccess        EmployeeBuildingAccess[]
   createdQuestions      QuestionLibrary[]    @relation("CreatedBy")
   initiatedMeetings     Meeting[]            @relation("Initiator")
+  questionPools     QuestionPool[]     
   auditLogs             AuditLog[]
 }
 
@@ -99,6 +101,7 @@ model QuestionLibrary {
   createdByEmployeeId String?
   createdAt           DateTime  @default(now())
 
+  poolItems         QuestionPoolItem[]  
   createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: SetNull)
   agendaItems         AgendaItem[]
 }
@@ -167,4 +170,32 @@ model AuditLog {
   createdAt       DateTime  @default(now())
 
   employee        Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+
+model QuestionPool {
+  id          String   @id @default(uuid())
+  name        String
+  type        String   // 'GLOBAL' или 'PRIVATE'
+  employeeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employee    Employee?            @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  items       QuestionPoolItem[]
+
+  @@index([employeeId])
+}
+
+model QuestionPoolItem {
+  id          String   @id @default(uuid())
+  poolId      String
+  questionId  String
+  orderNumber Int
+
+  pool     QuestionPool    @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  question QuestionLibrary @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([poolId, questionId])
+  @@index([poolId])
 }
