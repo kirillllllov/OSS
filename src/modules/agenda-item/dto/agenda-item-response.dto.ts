@@ -7,4 +7,12 @@ export class AgendaItemResponseDto {
   @ApiProperty() orderNumber: number;
   @ApiPropertyOptional() customProtocolText?: string;
   @ApiPropertyOptional() customBulletinText?: string;
+  @ApiPropertyOptional() question?: {
+    id: string;
+    shortTitle?: string;
+    protocolText?: string;
+    bulletinText?: string;
+    quorumType?: string;
+    category?: string;
+  };
 }

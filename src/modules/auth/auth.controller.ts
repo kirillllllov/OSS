@@ -22,16 +22,16 @@ export class AuthController {
       loginDto.password,
     );
     if (!employee) throw new UnauthorizedException('Неверный email или пароль');
-    // Сохраняем в сессию
     req.session.employeeId = employee.id;
-    req.session.role = employee.role;
+    req.session.companyId = employee.companyId;
     return {
       message: 'Успешный вход',
       employee: {
         id: employee.id,
         email: employee.email,
         fullName: employee.fullName,
-        role: employee.role,
+        companyId: employee.companyId,
+        company: employee.company,
       },
     };
   }

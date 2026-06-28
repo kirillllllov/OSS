@@ -5,15 +5,18 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {
-    // Создаём администратора при старте, если его нет
     this.seedAdmin();
   }
 
   private async seedAdmin() {
     const adminEmail = 'admin@uk.ru';
-    const existing = await this.prisma.employee.findUnique({
-      where: { email: adminEmail },
-    });
+
+    let company = await this.prisma.company.findFirst({ where: { name: 'УК по умолчанию' } });
+    if (!company) {
+      company = await this.prisma.company.create({ data: { name: 'УК по умолчанию' } });
+    }
+
+    const existing = await this.prisma.employee.findUnique({ where: { email: adminEmail } });
     if (!existing) {
       const hashedPassword = await bcrypt.hash('admin123', 10);
       await this.prisma.employee.create({
@@ -21,11 +24,16 @@ export class AuthService {
           email: adminEmail,
           passwordHash: hashedPassword,
           fullName: 'Главный Администратор',
-          role: 'COMPANY_ADMIN',
+          companyId: company.id,
           isActive: 1,
         },
       });
       console.log('Администратор создан: admin@uk.ru / admin123');
+    } else if (!existing.companyId) {
+      await this.prisma.employee.update({
+        where: { id: existing.id },
+        data: { companyId: company.id },
+      });
     }
   }
 
@@ -37,8 +45,9 @@ export class AuthService {
         email: true,
         passwordHash: true,
         fullName: true,
-        role: true,
+        companyId: true,
         isActive: true,
+        company: { select: { id: true, name: true } },
       },
     });
     if (!employee || employee.isActive !== 1) return null;

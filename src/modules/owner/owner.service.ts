@@ -18,6 +18,18 @@ export class OwnerService {
     return list.map(o => this.toDto(o));
   }
 
+  async findByBuilding(buildingId: string) {
+    const list = await this.repo.findByBuilding(buildingId);
+    return list.map(o => ({
+      id: o.id,
+      fullName: o.fullName,
+      premises: (o.ownershipRights ?? []).map((r: any) => ({
+        id: r.premise?.id,
+        number: r.premise?.number,
+      })).filter(p => p.id),
+    }));
+  }
+
   async findOne(id: string): Promise<any> {
     const owner = await this.repo.findById(id);
     if (!owner) throw new NotFoundException('Собственник не найден');
@@ -36,6 +48,6 @@ export class OwnerService {
   }
 
   private toDto(o: any): OwnerResponseDto {
-    return { id: o.id, fullName: o.fullName, inn: o.inn, snils: o.snils };
+    return { id: o.id, fullName: o.fullName, birthDate: o.birthDate, inn: o.inn, snils: o.snils };
   }
 }

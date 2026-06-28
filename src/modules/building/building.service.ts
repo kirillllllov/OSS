@@ -3,13 +3,13 @@ import { BuildingRepository } from './building.repository';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { UpdateBuildingDto } from './dto/update-building.dto';
 import { BuildingResponseDto } from './dto/building-response.dto';
-import { PrismaService } from '../prisma/prisma.service';  // добавьте импорт
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BuildingService {
   constructor(
     private readonly buildingRepository: BuildingRepository,
-    private readonly prisma: PrismaService, // добавьте эту строку
+    private readonly prisma: PrismaService,
   ) {}
 
   async create(data: CreateBuildingDto): Promise<BuildingResponseDto> {

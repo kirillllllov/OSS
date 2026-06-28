@@ -25,6 +25,12 @@ export class OwnerController {
     return this.svc.findAll();
   }
 
+  @Get('by-building/:buildingId')
+  @ApiOperation({ summary: 'Собственники дома (для выбора инициатора)' })
+  findByBuilding(@Param('buildingId') buildingId: string) {
+    return this.svc.findByBuilding(buildingId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Получить собственника по ID (с помещениями и контактами)' })
   findOne(@Param('id') id: string) {

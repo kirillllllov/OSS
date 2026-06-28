@@ -42,6 +42,14 @@ export class AgendaItemService {
       orderNumber: i.orderNumber,
       customProtocolText: i.customProtocolText,
       customBulletinText: i.customBulletinText,
+      question: i.question ? {
+        id: i.question.id,
+        shortTitle: i.question.shortTitle,
+        protocolText: i.question.protocolText,
+        bulletinText: i.question.bulletinText,
+        quorumType: i.question.quorumType,
+        category: i.question.category,
+      } : undefined,
     };
   }
 }

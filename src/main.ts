@@ -3,14 +3,17 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
+import * as connectPgSimple from 'connect-pg-simple';
+import { Pool } from 'pg';
 
+const PgSession = connectPgSimple(session);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   //app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  app.enableCors();
+  app.enableCors({ origin: true, credentials: true });
 
   const config = new DocumentBuilder()
     .setTitle('Управление ОСС API')
@@ -21,21 +24,27 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  const pgPool = new Pool({
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:123@localhost:5432/oss_db',
+  });
+
   app.use(
     session({
+      store: new PgSession({
+        pool: pgPool,
+        tableName: 'user_sessions',
+        createTableIfMissing: true,
+      }),
       secret: process.env.SESSION_SECRET || 'fallback-secret',
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false,      // для разработки (http). В production с https = true
+        secure: false,
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 24 часа
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
       },
     }),
   );
-
-
-
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');

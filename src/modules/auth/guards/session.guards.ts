@@ -15,14 +15,20 @@ export class SessionGuard implements CanActivate {
 
     const employee = await this.prisma.employee.findUnique({
       where: { id: session.employeeId },
-      select: { id: true, email: true, fullName: true, role: true, isActive: true },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        companyId: true,
+        isActive: true,
+        company: { select: { id: true, name: true } },
+      },
     });
 
     if (!employee || employee.isActive !== 1) {
       throw new UnauthorizedException('Аккаунт заблокирован или не существует');
     }
 
-    // Прикрепляем информацию о пользователе к запросу
     request.user = employee;
     return true;
   }

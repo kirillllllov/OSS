@@ -10,9 +10,6 @@ export class CreateEmployeeDto {
   @ApiProperty()
   fullName: string;
 
-  @ApiPropertyOptional({ default: 'EMPLOYEE' })
-  role?: string; // 'COMPANY_ADMIN' или 'EMPLOYEE'
-
   @ApiPropertyOptional({ type: [String] })
-  buildingIds?: string[]; // ID домов, к которым дать доступ
+  buildingIds?: string[];
 }

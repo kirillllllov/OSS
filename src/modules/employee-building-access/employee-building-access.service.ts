@@ -34,7 +34,7 @@ export class EmployeeBuildingAccessService {
   async findByBuilding(buildingId: string) {
     return this.prisma.employeeBuildingAccess.findMany({
       where: { buildingId },
-      include: { employee: { select: { fullName: true, email: true, role: true } } },
+      include: { employee: { select: { fullName: true, email: true, companyId: true, company: { select: { name: true } } } } },
     });
   }
 }

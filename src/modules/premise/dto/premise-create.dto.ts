@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsUUID, IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsOptional, IsInt, Min } from 'class-validator';
 
 export class CreatePremiseDto {
   @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
@@ -23,4 +23,13 @@ export class CreatePremiseDto {
   @ApiProperty({ example: 'individual', enum: ['individual', 'shared', 'joint'] })
   @IsString()
   ownershipForm: string;
+
+  @ApiPropertyOptional({ example: 'Квартира' })
+  @IsOptional()
+  @IsString()
+  premiseType?: string;
+  @ApiPropertyOptional({ example: 3 })
+  @IsOptional()
+  @IsInt()
+  floor?: number;
 }

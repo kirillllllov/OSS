@@ -7,6 +7,8 @@ export class PremiseResponseDto {
   @ApiProperty({ required: false }) cadastralNumber?: string;
   @ApiProperty() area: number;
   @ApiProperty() ownershipForm: string;
+  @ApiProperty() premiseType: string;
+  @ApiProperty({ required: false }) floor?: number;
   @ApiProperty() createdAt: Date;
   @ApiProperty() updatedAt: Date;
 }

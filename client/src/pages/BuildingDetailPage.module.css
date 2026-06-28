@@ -1,0 +1,507 @@
+.page {
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 16px;
+}
+
+.tab {
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-tab-inactive);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s;
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.tab:hover {
+  color: #424242;
+}
+
+.tab.activeTab {
+  color: var(--color-tab-active);
+  border-bottom-color: #212121;
+  font-weight: 700;
+}
+
+/* ── Tab content ── */
+.tabContent {
+  padding: 24px 20px;
+  background: #fff;
+  min-height: 400px;
+}
+
+/* ── Info table (General Info tab) ── */
+.infoTable {
+  width: 100%;
+  max-width: 700px;
+  border-collapse: collapse;
+}
+
+.infoTable tr {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.infoTable td {
+  padding: 10px 4px;
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.infoLabel {
+  color: #757575;
+  width: 280px;
+  padding-right: 24px !important;
+}
+
+.infoValue {
+  color: #212121;
+  font-weight: 400;
+}
+
+/* ── Meetings tab ── */
+.meetingsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.meetingFilters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.filterField {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  background: #fff;
+  font-size: 13px;
+  color: #9e9e9e;
+  cursor: pointer;
+}
+
+.filterField svg {
+  width: 15px;
+  height: 15px;
+  color: #9e9e9e;
+}
+
+.filterInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: #424242;
+  min-width: 120px;
+}
+.filterInput::placeholder { color: #bdbdbd; }
+
+.sortSelect {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  background: #fff;
+}
+.sortSelect select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: #424242;
+  cursor: pointer;
+}
+
+.btnCreate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: var(--color-green);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+}
+.btnCreate:hover {
+  background: var(--color-green-dark);
+}
+
+/* ── Meetings table ── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table thead tr {
+  background: var(--color-table-header);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 500;
+  color: #424242;
+  white-space: nowrap;
+}
+.table thead th:first-child {
+  width: 36px;
+  padding-left: 16px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.table tbody tr:hover {
+  background: #fafafa;
+}
+.table tbody td {
+  padding: 10px 12px;
+  color: #212121;
+  vertical-align: middle;
+}
+.table tbody td:first-child {
+  padding-left: 16px;
+}
+
+.stageBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  background: #e3f2fd;
+  color: #1565c0;
+}
+.stageBadge.voting {
+  background: #fff3e0;
+  color: #e65100;
+}
+.stageBadge.done {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.stageBadge.prep {
+  background: #fce4ec;
+  color: #880e4f;
+}
+
+.actionBtns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.actionBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.1s;
+  border: none;
+  background: none;
+}
+
+.actionBtn.view {
+  color: #1976d2;
+}
+.actionBtn.view:hover { background: #e3f2fd; }
+.actionBtn.del {
+  color: #e53935;
+}
+.actionBtn.del:hover { background: #ffebee; }
+
+.actionBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dateRange {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 12px;
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #9e9e9e;
+  font-size: 13px;
+}
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #9e9e9e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #4caf50;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bdbdbd;
+  border-radius: 2px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+}
+.checkbox:checked {
+  background: var(--color-green);
+  border-color: var(--color-green);
+}
+
+/* ── Premises tab ── */
+.premisesWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.premisesFilters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+}
+
+.premisesSearchField {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 6px 10px;
+  min-width: 180px;
+}
+.premisesSearchField svg {
+  width: 16px;
+  height: 16px;
+  color: #9e9e9e;
+  flex-shrink: 0;
+}
+
+.premisesSearchInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: #212121;
+  width: 100%;
+}
+.premisesSearchInput::placeholder {
+  color: #9e9e9e;
+}
+
+.premisesFilterBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #424242;
+  cursor: pointer;
+  background: #fff;
+  white-space: nowrap;
+  user-select: none;
+}
+.premisesFilterBtn svg {
+  width: 16px;
+  height: 16px;
+  color: #757575;
+}
+
+.allFiltersBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #424242;
+  cursor: pointer;
+  background: #fff;
+  white-space: nowrap;
+}
+.allFiltersBtn svg {
+  width: 14px;
+  height: 14px;
+  color: #757575;
+}
+
+.premisesActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.btnCreatePremise {
+  padding: 8px 20px;
+  background: var(--color-green);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnCreatePremise:hover {
+  background: var(--color-green-dark);
+}
+
+.btnExport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnExport:hover {
+  background: #1565c0;
+}
+.btnExport svg {
+  width: 18px;
+  height: 18px;
+}
+
+.premisesTableWrap {
+  overflow-x: auto;
+}
+
+.premisesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.premisesTable thead tr {
+  background: var(--color-table-header, #f5f5f5);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.premisesTable thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 500;
+  color: #424242;
+  white-space: nowrap;
+}
+.premisesTable thead th:first-child {
+  width: 40px;
+  padding-left: 16px;
+}
+.premisesTable thead th:last-child {
+  width: 48px;
+}
+
+.premisesTable tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.1s;
+}
+.premisesTable tbody tr:hover {
+  background: #fafafa;
+}
+.premisesTable tbody td {
+  padding: 10px 12px;
+  color: #212121;
+  vertical-align: middle;
+}
+.premisesTable tbody td:first-child {
+  padding-left: 16px;
+}
+
+.btnDeletePremise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #ef5350;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btnDeletePremise:hover {
+  background: #c62828;
+}
+.btnDeletePremise svg {
+  width: 16px;
+  height: 16px;
+}

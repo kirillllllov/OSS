@@ -16,8 +16,10 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
     if (!user) throw new ForbiddenException('Нет доступа');
-    const hasRole = requiredRoles.includes(user.role);
-    if (!hasRole) throw new ForbiddenException('Недостаточно прав');
+
+    // With company-based auth: any user with companyId is considered an admin
+    const hasAccess = requiredRoles.includes('COMPANY_ADMIN') ? !!user.companyId : false;
+    if (!hasAccess) throw new ForbiddenException('Недостаточно прав');
     return true;
   }
 }

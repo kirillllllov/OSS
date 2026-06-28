@@ -12,15 +12,15 @@ export class BuildingAccessGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // устанавливается SessionGuard
+    const user = request.user;
     const buildingId =
       request.params.id || request.query.buildingId || request.body.buildingId;
 
     if (!user || !buildingId) {
       throw new ForbiddenException('Недостаточно данных для проверки доступа');
     }
-    // Главный админ имеет доступ ко всем домам
-    if (user.role === 'COMPANY_ADMIN') return true;
+    // Users with a company have access to all buildings
+    if (user.companyId) return true;
 
     const access = await this.prisma.employeeBuildingAccess.findUnique({
       where: {

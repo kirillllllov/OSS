@@ -11,26 +11,18 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 export class EmployeeService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateEmployeeDto, currentUserRole: string) {
-    if (currentUserRole !== 'COMPANY_ADMIN') {
-      throw new ForbiddenException(
-        'Только главный админ может создавать сотрудников',
-      );
+  async create(dto: CreateEmployeeDto, currentUserCompanyId: string | null) {
+    if (!currentUserCompanyId) {
+      throw new ForbiddenException('Только сотрудник компании может создавать сотрудников');
     }
-    const {
-      email,
-      password,
-      fullName,
-      role = 'EMPLOYEE',
-      buildingIds = [],
-    } = dto;
+    const { email, password, fullName, buildingIds = [] } = dto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const employee = await this.prisma.employee.create({
       data: {
         email,
         passwordHash: hashedPassword,
         fullName,
-        role,
+        companyId: currentUserCompanyId,
         isActive: 1,
       },
     });
@@ -41,20 +33,11 @@ export class EmployeeService {
   }
 
   async assignBuildingsToEmployee(employeeId: string, buildingIds: string[]) {
-    // Используем транзакцию с upsert для каждого buildingId
     const operations = buildingIds.map((buildingId) =>
       this.prisma.employeeBuildingAccess.upsert({
-        where: {
-          employeeId_buildingId: {
-            employeeId,
-            buildingId,
-          },
-        },
-        update: {}, // ничего не обновляем, если запись существует
-        create: {
-          employeeId,
-          buildingId,
-        },
+        where: { employeeId_buildingId: { employeeId, buildingId } },
+        update: {},
+        create: { employeeId, buildingId },
       }),
     );
     await this.prisma.$transaction(operations);
@@ -74,9 +57,10 @@ export class EmployeeService {
         id: true,
         email: true,
         fullName: true,
-        role: true,
+        companyId: true,
         isActive: true,
         createdAt: true,
+        company: { select: { id: true, name: true } },
       },
     });
   }

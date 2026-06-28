@@ -16,11 +16,28 @@ export class OwnerRepository {
     });
   }
 
-  create(data: { fullName: string; inn?: string; snils?: string; contacts?: string }) {
+  findByBuilding(buildingId: string) {
+    return this.prisma.owner.findMany({
+      where: {
+        ownershipRights: {
+          some: { premise: { buildingId } },
+        },
+      },
+      include: {
+        ownershipRights: {
+          where: { premise: { buildingId } },
+          include: { premise: { select: { id: true, number: true } } },
+        },
+      },
+      orderBy: { fullName: 'asc' },
+    });
+  }
+
+  create(data: { fullName: string; birthDate?: string; inn?: string; snils?: string; contacts?: string }) {
     return this.prisma.owner.create({ data });
   }
 
-  update(id: string, data: Partial<{ fullName: string; inn: string; snils: string; contacts: string }>) {
+  update(id: string, data: Partial<{ fullName: string; birthDate: string; inn: string; snils: string; contacts: string }>) {
     return this.prisma.owner.update({ where: { id }, data });
   }
 

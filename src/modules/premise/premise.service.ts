@@ -51,9 +51,16 @@ export class PremiseService {
 
   private toDto(p: any): PremiseResponseDto {
     return {
-      id: p.id, buildingId: p.buildingId, number: p.number,
-      cadastralNumber: p.cadastralNumber, area: p.area,
-      ownershipForm: p.ownershipForm, createdAt: p.createdAt, updatedAt: p.updatedAt,
+      id: p.id,
+      buildingId: p.buildingId,
+      number: p.number,
+      cadastralNumber: p.cadastralNumber,
+      area: p.area,
+      ownershipForm: p.ownershipForm,
+      premiseType: p.premiseType ?? 'Квартира',
+      floor: p.floor ?? undefined,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
     };
   }
 }

@@ -6,6 +6,13 @@ datasource db {
   provider = "postgresql"
 }
 
+model Company {
+  id        String     @id @default(uuid())
+  name      String
+  createdAt DateTime   @default(now())
+  employees Employee[]
+}
+
 model Building {
   id               String    @id @default(uuid())
   address          String
@@ -30,6 +37,10 @@ model Premise {
   cadastralNumber   String?
   area              Float
   ownershipForm     String
+  premiseType       String   @default("Квартира")
+  floor             Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   building          Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
   ownershipRights   OwnershipRight[]
@@ -38,12 +49,23 @@ model Premise {
 model Owner {
   id                String   @id @default(uuid())
   fullName          String
+  birthDate         String?
   inn               String?  @unique
   snils             String?  @unique
   contacts          String?  @unique
+  ownershipRights       OwnershipRight[]
+  answers               QuestionAnswer[]
+  meetingInitiatorLinks MeetingOwnerInitiator[]
+}
 
-  ownershipRights   OwnershipRight[]
-  answers           QuestionAnswer[]
+model MeetingOwnerInitiator {
+  meetingId String
+  ownerId   String
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  owner   Owner   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@id([meetingId, ownerId])
 }
 
 model OwnershipRight {
@@ -67,16 +89,16 @@ model Employee {
   email                 String    @unique
   passwordHash          String
   fullName              String
-  role                  String
+  companyId             String?
   isActive              Int       @default(1)
   lastLogin             String?
   createdAt             DateTime  @default(now())
 
-
+  company               Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
   buildingAccess        EmployeeBuildingAccess[]
   createdQuestions      QuestionLibrary[]    @relation("CreatedBy")
   initiatedMeetings     Meeting[]            @relation("Initiator")
-  questionPools     QuestionPool[]     
+  questionPools         QuestionPool[]
   auditLogs             AuditLog[]
 }
 
@@ -101,7 +123,7 @@ model QuestionLibrary {
   createdByEmployeeId String?
   createdAt           DateTime  @default(now())
 
-  poolItems         QuestionPoolItem[]  
+  poolItems           QuestionPoolItem[]
   createdBy           Employee?    @relation("CreatedBy", fields: [createdByEmployeeId], references: [id], onDelete: SetNull)
   agendaItems         AgendaItem[]
 }
@@ -109,10 +131,10 @@ model QuestionLibrary {
 model Meeting {
   id                      String    @id @default(uuid())
   buildingId              String
-  number                  String
+  number                  String?
   status                  String    @default("draft")
   form                    String
-  startDate               String
+  startDate               String?
   endDate                 String?
   inPersonStartTime       String?
   inPersonAddress         String?
@@ -128,9 +150,8 @@ model Meeting {
 
   building                Building   @relation(fields: [buildingId], references: [id], onDelete: Cascade)
   initiator               Employee?  @relation("Initiator", fields: [initiatorEmployeeId], references: [id], onDelete: SetNull)
+  ownerInitiators         MeetingOwnerInitiator[]
   agendaItems             AgendaItem[]
-
-  @@unique([buildingId, number])
 }
 
 model AgendaItem {
@@ -172,11 +193,10 @@ model AuditLog {
   employee        Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
 }
 
-
 model QuestionPool {
   id          String   @id @default(uuid())
   name        String
-  type        String   // 'GLOBAL' или 'PRIVATE'
+  type        String
   employeeId  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

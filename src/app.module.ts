@@ -13,6 +13,9 @@ import { AgendaItemModule } from './modules/agenda-item/agenda-item.module';
 import { QuestionAnswerModule } from './modules/question-answer/question-answer.module';  
 import { AuthModule } from './modules/auth/auth.module';
 import { QuestionPoolModule } from './modules/question-pool/question-pool.module';
+import { DocumentsModule } from './modules/documents/documents.module';
+
+
 
 @Module({
   imports: [
@@ -30,6 +33,8 @@ import { QuestionPoolModule } from './modules/question-pool/question-pool.module
     QuestionAnswerModule,
     AuthModule,
     QuestionPoolModule,
+    DocumentsModule,
+
   ],
 })
 export class AppModule {}

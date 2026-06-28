@@ -4,7 +4,8 @@ export class MeetingResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() buildingId: string;
   @ApiPropertyOptional() initiatorEmployeeId?: string;
-  @ApiProperty() number: string;
+  @ApiPropertyOptional() initiatorOwners?: { id: string; fullName: string; premises?: string[] }[];
+  @ApiPropertyOptional() number?: string;
   @ApiProperty() form: string;
   @ApiProperty() status: string;
   @ApiProperty() startDate: string;
